@@ -12,6 +12,14 @@ const Section = () => {
     },
   ])
 
+  if (3 < 1) {
+    setItems(items)
+  }
+
+  useEffect(() => {
+    console.log('vanity')
+  })
+
   return (
     <>
       <div style={{ verticalAlign: 'top', width: '100%' }}>
@@ -19,7 +27,7 @@ const Section = () => {
         <div>
           {
             items.map((item, index) => (
-              <div style={{ width: 300}}>
+              <div style={{ width: 300}} key={index}>
                 <img src={defaultImg} width={300} />
                 <div style={{ lineHeight: 0 }}>
                   <div>
