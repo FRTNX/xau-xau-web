@@ -1,65 +1,34 @@
-import { useEffect, useState } from "react";
-import defaultImg from './assets/images/1.jpg';
+import { lazy, Suspense } from "react";
+import { Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 
-const Section = () => {
-  const [items, setItems] = useState([
-    {
-      img: defaultImg,
-      name: 'Acer Laptop',
-      price: 150,
-      currency: 'USD$',
-      location: 'Harare'
-    },
-  ])
 
-  if (3 < 1) {
-    setItems(items)
-  }
+// const Home = lazy(() => import('../pages/Home'));
+// const Article = lazy(() => import('../pages/Article/Article'));
+// const NewArticle = lazy(() => import('../pages/Article/NewArticle'));
+// const EditArticle = lazy(() => import('../pages/Article/EditArticle'));
+// const Services = lazy(() => import('../pages/Services/Services'));
 
-  useEffect(() => {
-    console.log('vanity')
-  })
+import MainLayout from "./MainLayout";
 
-  return (
-    <>
-      <div style={{ verticalAlign: 'top', width: '100%' }}>
-        <p>Electronics</p>
-        <div>
-          {
-            items.map((item, index) => (
-              <div style={{ width: 300}} key={index}>
-                <img src={defaultImg} width={300} />
-                <div style={{ lineHeight: 0 }}>
-                  <div>
-                    <p style={{ display: 'inline-block'}}>{item.name}</p>
-                    <p style={{ display: 'inline-block', float: 'right'}}>{item.currency}{" "}{Number(item.price).toFixed(2)}</p>
-                  </div>
-                  <p>{item.location}</p>
-                </div>
-                <div>
-
-                </div>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-    </>
-  )
-}
+const Home = lazy(() => import('./Home'));
+const Product = lazy(() => import('./Product'));
 
 const App = () => {
-
   return (
-    <>
-      <header style={{ position: 'fixed', top: 0, borderBottom: '2px solid white', width: '100%', paddingTop: 5, paddingBottom: 5 }}>
-        <p style={{ paddingLeft: 15, fontSize: 30, lineHeight: 0 }}>xau-xau</p>
-      </header>
-      <main style={{ width: 1200, marginLeft: 'auto', marginRight: 'auto', position: 'relative', top: 62 }}>
-        <Section />
-      </main>
-    </>
-  )
-}
+    <Router>
+      <Suspense fallback={null}>
+        <MainLayout>
+        <Switch>
+          <Route path={'/'} exact component={Home} />
+          <Route path={'/product'} exact component={Product} />
+        </Switch>
+        </MainLayout>
+       
+      </Suspense>
+    </Router>
+
+  );
+};
 
 export default App;

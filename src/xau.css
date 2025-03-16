@@ -1,0 +1,19 @@
+.dark-primary {
+  background: rgb(0, 0, 0);
+}
+
+span.ant-menu-title-content {
+  color: white
+}
+
+li.ant-menu-item {
+  background-color: black;
+}
+
+li.ant-menu-item-selected {
+  background-color: green;
+}
+
+li.ant-menu-item:focus {
+  background-color: grey;
+}
