@@ -1,6 +1,10 @@
 .dark-primary {
   background: rgb(0, 0, 0);
 }
+.dark-secondary {
+  background: #2a2b2c;
+}
+
 
 span.ant-menu-title-content {
   color: white
@@ -16,4 +20,29 @@ li.ant-menu-item-selected {
 
 li.ant-menu-item:focus {
   background-color: grey;
+}
+
+p {
+  color: white
+}
+
+li {
+  color: white
+}
+
+.ant-breadcrumb-link {
+  color: white
+}
+
+li.ant-breadcrumb-separator {
+  color: rgb(255, 255, 255);
+}
+.ant-input {
+  background: #2a2b2c;
+  border: none;
+}
+
+.ant-input-search-button {
+  background: grey;
+  border: none;
 }

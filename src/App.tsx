@@ -19,12 +19,12 @@ const App = () => {
     <Router>
       <Suspense fallback={null}>
         <MainLayout>
-        <Switch>
-          <Route path={'/'} exact component={Home} />
-          <Route path={'/product'} exact component={Product} />
-        </Switch>
+          <Switch>
+            <Route path={'/'} exact component={Home} />
+            <Route path={'/product/:id'} exact component={Product} />
+          </Switch>
         </MainLayout>
-       
+
       </Suspense>
     </Router>
 
