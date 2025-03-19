@@ -117,7 +117,7 @@ const MainLayout: React.FC = ({ children }) => {
           <div style={{ marginTop: 'auto' }} onClick={() => window.location.href = '/'}>
             <img src={logo} height={'100%'} />
           </div>
-          <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200, marginLeft: 80, marginTop: 20 }} />
+          {/* <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200, marginLeft: 80, marginTop: 20 }} /> */}
         </Header>
         <div className='dark-primary' style={{ borderRadius: 0 }}>
           <Breadcrumb

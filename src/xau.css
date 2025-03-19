@@ -2,9 +2,16 @@
   background: rgb(0, 0, 0);
 }
 .dark-secondary {
-  background: #2a2b2c;
+  background: #1a1a1a;
 }
 
+span {
+  color: white;
+}
+
+label {
+  color: white;
+}
 
 span.ant-menu-title-content {
   color: white
