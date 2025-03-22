@@ -1,15 +1,15 @@
 import config from "../config/config";
 
 
-const createUser = async (formData: FormData) => {
+const createUser = async (params: Object) => {
   try {
     const response = await fetch(`${config.baseUrl}/api/v0/user`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
-        // 'Content-Type': 'multipart/form-data'
+        'Content-Type': 'application/json'
       },
-      body: formData
+      body: JSON.stringify(params)
     });
 
     return await response.json();

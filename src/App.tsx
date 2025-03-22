@@ -14,6 +14,9 @@ import MainLayout from "./MainLayout";
 const Home = lazy(() => import('./Home'));
 const Product = lazy(() => import('./Product'));
 const SignIn = lazy(() => import('./SignIn'));
+const SignUp = lazy(() => import('./SignUp'));
+const CreateProduct = lazy(() => import('./CreateProduct'));
+
 
 const App = () => {
   return (
@@ -24,6 +27,8 @@ const App = () => {
             <Route path={'/'} exact component={Home} />
             <Route path={'/product/:id'} exact component={Product} />
             <Route path={'/signin'} exact component={SignIn} />
+            <Route path={'/register'} exact component={SignUp} />
+            <Route path={'/new/product'} exact component={CreateProduct} />
           </Switch>
         </MainLayout>
       </Suspense>

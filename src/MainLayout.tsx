@@ -1,49 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme, Button } from 'antd';
 
-import ClockCircleOutlined from '@ant-design/icons/ClockCircleOutlined';
-import { Input, Space } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import { Select } from 'antd';
-import { AudioOutlined } from '@ant-design/icons';
-import type { GetProps } from 'antd';
-
-
-import MenuCollapsable from './components/MenuCollapsable';
 
 import logo from './assets/images/logo.png'
 import brand from './assets/images/logo-square.png';
 
 import './xau.css';
-
-type SearchProps = GetProps<typeof Input.Search>;
-
-const { Search } = Input;
-const { TextArea } = Input;
-
-const suffix = (
-  <AudioOutlined
-    style={{
-      fontSize: 16,
-      color: '#1677ff',
-    }}
-  />
-);
-
-const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
-
-const options = [
-  {
-    value: 'zhejiang',
-    label: 'Zhejiang',
-  },
-  {
-    value: 'jiangsu',
-    label: 'Jiangsu',
-  },
-];
 
 
 const themeOptions = {
@@ -82,9 +46,13 @@ const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOu
 const MainLayout: React.FC = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
 
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+  // const {
+  //   token: { colorBgContainer, borderRadiusLG },
+  // } = theme.useToken();
+
+  if (!localStorage.getItem('user')) {
+    window.location.href = '/signin'
+  }
 
   return (
     <Layout style={{ borderRadius: 15 }}>
@@ -112,11 +80,13 @@ const MainLayout: React.FC = ({ children }) => {
         />
       </Sider>
       <Layout style={{}}>
-        <Header className='dark-primary' style={{ display: 'flex', alignItems: 'center', position: 'sticky', height: 111 }}>
+        <Header className='dark-primary' style={{ display: 'flex', alignItems: 'center', height: 111 }}>
           {/* <p style={{ fontSize: 35, color: 'white', fontFamily: 'monospace' }}>xau-xau</p> */}
           <div style={{ marginTop: 'auto' }} onClick={() => window.location.href = '/'}>
             <img src={logo} height={'100%'} />
           </div>
+          <p>{JSON.parse(localStorage.getItem('user')).username}</p>
+          <p style={{ paddingLeft: 20}}><a href={'/new/product'} style={{ color: 'white'}}>Sell</a></p>
           {/* <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200, marginLeft: 80, marginTop: 20 }} /> */}
         </Header>
         <div className='dark-primary' style={{ borderRadius: 0 }}>

@@ -44,9 +44,15 @@ li {
 li.ant-breadcrumb-separator {
   color: rgb(255, 255, 255);
 }
+
 .ant-input {
   background: #2a2b2c;
   border: none;
+}
+
+.ant-input:focus
+.ant-input:focus-visible {
+  background: blue;
 }
 
 .ant-input-search-button {
