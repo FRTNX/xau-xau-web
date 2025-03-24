@@ -9,20 +9,18 @@ import img from './assets/images/2.jpg';
 
 import {
   Button,
-  Cascader,
-  Checkbox,
-  ColorPicker,
   DatePicker,
   Form,
   Input,
   InputNumber,
-  Radio,
   Rate,
   Select,
-  Slider,
-  Switch,
-  TreeSelect,
+  Space,
+  ConfigProvider,
+  theme
 } from 'antd';
+
+import { MdImage } from 'react-icons/md';
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
@@ -34,106 +32,7 @@ const normFile = (e: any) => {
   return e?.fileList;
 };
 
-const FormDisabledDemo: React.FC = () => {
-  const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
 
-  return (
-    <>
-      <Checkbox
-        checked={componentDisabled}
-        onChange={(e) => setComponentDisabled(e.target.checked)}
-      >
-        Form disabled
-      </Checkbox>
-      <Form
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 14 }}
-        layout="horizontal"
-        disabled={componentDisabled}
-        style={{ maxWidth: 600 }}
-      >
-        <Form.Item label="Checkbox" name="disabled" valuePropName="checked">
-          <Checkbox>Checkbox</Checkbox>
-        </Form.Item>
-        <Form.Item label="Radio">
-          <Radio.Group>
-            <Radio value="apple"> Apple </Radio>
-            <Radio value="pear"> Pear </Radio>
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item label="Input">
-          <Input />
-        </Form.Item>
-        <Form.Item label="Select">
-          <Select>
-            <Select.Option value="demo">Demo</Select.Option>
-          </Select>
-        </Form.Item>
-        <Form.Item label="TreeSelect">
-          <TreeSelect
-            treeData={[
-              { title: 'Light', value: 'light', children: [{ title: 'Bamboo', value: 'bamboo' }] },
-            ]}
-          />
-        </Form.Item>
-        <Form.Item label="Cascader">
-          <Cascader
-            options={[
-              {
-                value: 'zhejiang',
-                label: 'Zhejiang',
-                children: [
-                  {
-                    value: 'hangzhou',
-                    label: 'Hangzhou',
-                  },
-                ],
-              },
-            ]}
-          />
-        </Form.Item>
-        <Form.Item label="DatePicker">
-          <DatePicker />
-        </Form.Item>
-        <Form.Item label="RangePicker">
-          <RangePicker />
-        </Form.Item>
-        <Form.Item label="InputNumber">
-          <InputNumber />
-        </Form.Item>
-        <Form.Item label="TextArea">
-          <TextArea rows={4} />
-        </Form.Item>
-        <Form.Item label="Switch" valuePropName="checked">
-          <Switch />
-        </Form.Item>
-        <Form.Item label="Upload" valuePropName="fileList" getValueFromEvent={normFile}>
-          <Upload action="/upload.do" listType="picture-card">
-            <button
-              style={{ color: 'inherit', cursor: 'inherit', border: 0, background: 'none' }}
-              type="button"
-            >
-              <PlusOutlined />
-              <div style={{ marginTop: 8 }}>Upload</div>
-            </button>
-          </Upload>
-        </Form.Item>
-        <Form.Item label="Button">
-          <Button>Button</Button>
-        </Form.Item>
-        <Form.Item label="Slider">
-          <Slider />
-        </Form.Item>
-        <Form.Item label="ColorPicker">
-          <ColorPicker />
-        </Form.Item>
-        <Form.Item label="Rate">
-          <Rate />
-        </Form.Item>
-      </Form>
-    </>
-  );
-};
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -147,15 +46,29 @@ const getBase64 = (file: FileType): Promise<string> =>
 
 const App: React.FC = () => {
   const mobile = window.innerWidth < 500;
+
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
+
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [previewList, setPreviewList] = useState([]);
+
+  const [formDisabled, setFormDisabled] = useState(false);
+
+  const [price, setPrice] = useState(0);
+  const [currency, setCurrency] = useState('USD$');
+
+  const [contactMethod, setContactMethod] = useState('WA');
+  const [countryCode, setCountryCode] = useState('263');
+
+  const [phoneNumber, setPhoneNumber] = useState<number>();
+  const [email, setEmail] = useState('');
+
   const [data, setData] = useState({
-    name: 'Acer Laptop i7 8th Gen',
-    description: 'Im selling a powerful acer laptop in good condition. The laptop has an 8th generation intel i7 processor, 32 GB DDR4 RAM, 1TB SSD, and comes with a charger, USB adapter, and VGA cables.',
-    price: 180,
-    currency: 'USD$',
+    name: 'Item Title',
+    description: 'Item Description.',
+    // price: 0,
+    // currency: 'USD$',
     location: 'Bulawayo',
     category: 'Computers',
     created: '5 days ago'
@@ -170,10 +83,51 @@ const App: React.FC = () => {
     setPreviewOpen(true);
   };
 
-  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+  const handleImageChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
     console.log(newFileList)
     updatePreviewList(newFileList);
+  }
+
+  const handleChange = (name, event) => {
+    console.log(`updating ${name} with ${event.target.value}`)
+    setData({ ...data, [name]: event.target.value });
+  }
+
+  const handlePriceChange = (newPrice: number | null) => {
+    if (newPrice) {
+      console.log('price event:', newPrice)
+      setPrice(newPrice)
+    }
+  }
+
+  const handleChangeCurrency = (newCurrency: string | null) => {
+    if (newCurrency) {
+      console.log('category event:', newCurrency)
+      setCurrency(newCurrency);
+    }
+  };
+
+  const handleChangeContactMethod = (method: string | null) => {
+    if (method) {
+      setContactMethod(method);
+    }
+  }
+
+  const handleChangeEmail = (event) => {
+    setEmail(event.target.value);
+  }
+
+  const handleChangePhoneNumber = (newNumber: number | null) => {
+    if (newNumber) {
+      setPhoneNumber(newNumber);
+    }
+  };
+
+  const handleChangeCountryCode = (code: string | null) => {
+    if (code) {
+      setCountryCode(code);
+    }
   }
 
   const updatePreviewList = async (fileList) => {
@@ -191,59 +145,170 @@ const App: React.FC = () => {
 
   return (
     <>
-      <div style={{ minHeight: '100vh' }}>
-        <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 20 }, 18]}>
-          <Col xs={24} sm={12} md={12} lg={12} xl={15}>
-            <Carousel arrows infinite={false} autoplay={{ dotDuration: true }} autoplaySpeed={5000}>
+      <ConfigProvider
+        theme={{ algorithm: [theme.darkAlgorithm], token: { colorBgContainer: '#292929'} }}
+      >
+        <div style={{ minHeight: '100vh' }}>
+          <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 20 }, 18]}>
+            <Col xs={24} sm={12} md={12} lg={12} xl={15}>
+              <Carousel arrows infinite={false} autoplay={{ dotDuration: true }} autoplaySpeed={5000}>
+                {
+                  previewList.map((file, index) => (
+                    <div key={index}>
+                      <img
+                        src={file}
+                        width={'100%'}
+                        height={mobile ? 400 : 600}
+                        style={{ objectFit: 'cover', borderRadius: 10 }} />
+                    </div>
+                  ))
+                }
+
+              </Carousel>
               {
-                previewList.map((file, index) => (
-                  <div>
-                    <img
-                      src={file}
-                      width={'100%'}
-                      height={mobile ? 400 : 600}
-                      style={{ objectFit: 'cover', borderRadius: 10 }} />
-                    {/* <p>{index}</p> */}
+                previewList.length === 0 && (
+                  <div style={{ height: mobile ? 400 : 600, textAlign: 'center' }}>
+                    <MdImage size={mobile ? 250 : 400} color='grey' />
+                    <p>Uploaded images will appear here.</p>
                   </div>
-                ))
+                )
               }
-            </Carousel>
-            <div>
-              <div style={{ fontSize: 28 }}>
-                <p style={{ display: 'inline-block' }}>{data.name}</p>
-                <p style={{ display: 'inline-block', float: 'right' }}>{data.currency}{" "}{Number(data.price).toFixed(2)}</p>
+              <div>
+                <div style={{ fontSize: 28 }}>
+                  <p style={{ display: 'inline-block' }}>{data.name}</p>
+                  <p style={{ display: 'inline-block', float: 'right' }}>{currency}{" "}{Number(price).toFixed(2)}</p>
+                </div>
+                <p style={{ lineHeight: 0, fontSize: 18 }}>{data.created}</p>
+                <p style={{ fontSize: 18 }}>{data.location}</p>
+                <p style={{ fontSize: 16 }}>{data.description}</p>
               </div>
-              <p style={{ lineHeight: 0, fontSize: 18}}>{data.created}</p>
-              <p style={{ fontSize: 18}}>{data.location}</p>
-              <p style={{ fontSize: 16}}>{data.description}</p>
-            </div>
-          </Col>
-          <Col xs={24} sm={12} md={12} lg={12} xl={9}>
-            <>
-              <Upload
-                action="http://localhost:5555/api/v0/mock/img/upload"
-                listType="picture-card"
-                fileList={fileList}
-                onPreview={handlePreview}
-                onChange={handleChange}
-              >
-                {fileList.length >= 8 ? null : uploadButton}
-              </Upload>
-              {previewImage && (
-                <Image
-                  wrapperStyle={{ display: 'none' }}
-                  preview={{
-                    visible: previewOpen,
-                    onVisibleChange: (visible) => setPreviewOpen(visible),
-                    afterOpenChange: (visible) => !visible && setPreviewImage(''),
-                  }}
-                  src={previewImage}
-                />
-              )}
-            </>
-          </Col>
-        </Row>
-      </div>
+            </Col>
+            <Col xs={24} sm={12} md={12} lg={12} xl={9}>
+              <>
+                <Form
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{}}
+                  layout="horizontal"
+                  disabled={formDisabled}
+                  style={{ maxWidth: 600, color: 'white' }}
+                >
+                  <Form.Item label={<p>Upload</p>} valuePropName="fileList" getValueFromEvent={normFile}>
+                    <Upload
+                      action="http://localhost:5555/api/v0/mock/img/upload"
+                      listType="picture-card"
+                      fileList={fileList}
+                      onPreview={handlePreview}
+                      onChange={handleImageChange}
+                    >
+                      {fileList.length >= 8 ? null : uploadButton}
+                    </Upload>
+                    {previewImage && (
+                      <Image
+                        wrapperStyle={{ display: 'none' }}
+                        preview={{
+                          visible: previewOpen,
+                          onVisibleChange: (visible) => setPreviewOpen(visible),
+                          afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                        }}
+                        src={previewImage}
+                      />
+                    )}
+                  </Form.Item>
+                  <Form.Item label={<p>Item Name</p>}>
+                    <Input
+                      value={data.name}
+                      onChange={(e) => handleChange('name', e)}
+                    />
+                  </Form.Item>
+                  <Form.Item label={<p>Price</p>}>
+                    <Space.Compact>
+                      <Select
+                        defaultValue={'USD$'}
+                        style={{ width: '50%', height: 35 }}
+                        onChange={handleChangeCurrency}
+                      >
+                        <Select.Option value="USD$">USD</Select.Option>
+                        <Select.Option value="ZAR">Rand</Select.Option>
+                        <Select.Option value="ZIG$">ZIG</Select.Option>
+                      </Select>
+                      <InputNumber
+                        style={{ width: '100%' }}
+                        type='number'
+                        value={price}
+                        onChange={handlePriceChange}
+                      />
+                    </Space.Compact>
+                  </Form.Item>
+                  <Form.Item label={<p>Contact Method</p>}>
+                    <Select
+                      defaultValue={'WA'}
+                      style={{}}
+                      onChange={handleChangeContactMethod}
+                    >
+                      <Select.Option value="WA">Whatsapp</Select.Option>
+                      <Select.Option value="MAIL">Email</Select.Option>
+                    </Select>
+                  </Form.Item>
+                  {
+                    contactMethod === 'WA' && (
+                      <Form.Item label={<p>Whatsapp Number</p>}>
+                        <Space.Compact>
+                          <Select
+                            defaultValue={'263'}
+                            style={{ width: '50%', height: 35 }}
+                            onChange={handleChangeCountryCode}
+                          >
+                            <Select.Option value="263">+263</Select.Option>
+                            <Select.Option value="27">+27</Select.Option>
+                            <Select.Option value="1">+1</Select.Option>
+                          </Select>
+                          <InputNumber
+                            style={{ width: '100%' }}
+                            type='number'
+                            value={phoneNumber}
+                            onChange={handleChangePhoneNumber}
+                          />
+                        </Space.Compact>
+
+                      </Form.Item>
+                    )
+                  }
+                  {
+                    contactMethod === 'MAIL' && (
+                      <Form.Item label={<p>Email Address</p>}>
+                        <Input
+                          value={email}
+                          onChange={handleChangeEmail}
+                        />
+
+                      </Form.Item>
+                    )
+                  }
+                  <Form.Item label={<p>Location</p>}>
+                    <Input
+                      value={data.location}
+                      onChange={(e) => handleChange('location', e)}
+                    />
+                  </Form.Item>
+                  <Form.Item label={<p>Description</p>}>
+                    <TextArea
+                      value={data.description}
+                      onChange={(e) => handleChange('description', e)}
+                      rows={4}
+                    />
+                  </Form.Item>
+                  <Form.Item label={<p>Rate</p>}>
+                    <Rate />
+                  </Form.Item>
+                  <div style={{ maxWidth: 600, float: 'right', marginRight: 'auto' }}>
+                    <Button>Submit</Button>
+                  </div>
+                </Form>
+              </>
+            </Col>
+          </Row>
+        </div>
+      </ConfigProvider>
     </>
   )
 };

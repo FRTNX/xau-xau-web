@@ -49,8 +49,6 @@ const Product = () => {
           </Col>
         </Row>
       </div>
-
-
     </>
   )
 }

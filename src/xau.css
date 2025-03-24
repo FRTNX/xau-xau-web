@@ -1,33 +1,36 @@
 .dark-primary {
   background: rgb(0, 0, 0);
+  background-color: #000000;
+  color: black;
 }
 .dark-secondary {
   background: #1a1a1a;
 }
-
+/* 
 span {
   color: white;
 }
 
 label {
   color: white;
-}
+} */
 
-span.ant-menu-title-content {
-  color: white
-}
+/* span.ant-menu-title-content {
+  color: rgb(231, 231, 231)
+} */
 
 li.ant-menu-item {
   background-color: black;
 }
 
-li.ant-menu-item-selected {
-  background-color: green;
+li.ant-menu-submenu {
+  background-color: black;
 }
 
-li.ant-menu-item:focus {
+
+/* li.ant-menu-item:focus {
   background-color: grey;
-}
+} */
 
 p {
   color: white
@@ -37,25 +40,3 @@ li {
   color: white
 }
 
-.ant-breadcrumb-link {
-  color: white
-}
-
-li.ant-breadcrumb-separator {
-  color: rgb(255, 255, 255);
-}
-
-.ant-input {
-  background: #2a2b2c;
-  border: none;
-}
-
-.ant-input:focus
-.ant-input:focus-visible {
-  background: blue;
-}
-
-.ant-input-search-button {
-  background: grey;
-  border: none;
-}
