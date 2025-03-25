@@ -1,15 +1,15 @@
 import config from "../config/config";
 
 
-const createProduct = async (params: Object) => {
+const createProduct = async (form: FormData) => {
   try {
-    const response = await fetch(`${config.baseUrl}/api/v0/user`, {
+    const response = await fetch(`${config.baseUrl}/api/v0/product`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        // 'Content-Type': 'application/json'
       },
-      body: JSON.stringify(params)
+      body: form
     });
 
     return await response.json();
@@ -18,30 +18,9 @@ const createProduct = async (params: Object) => {
   }
 };
 
-const fetchProduct = async (params: Object) => {
+const fetchProduct = async (productId: string) => {
   try {
-    const response = await fetch(`${config.baseUrl}/api/v0/auth/signin`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(params)
-    });
-
-    return await response.json();
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const update = async (params: Object) => {
-
-}
-
-const readImage = async (userId: string) => {
-  try {
-    const response = await fetch(`${config.baseUrl}/api/v0/user/image?id=${userId}`, {
+    const response = await fetch(`${config.baseUrl}/api/v0/product?id=${productId}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -55,9 +34,41 @@ const readImage = async (userId: string) => {
   }
 }
 
+const fetchProducts = async () => {
+  try {
+    const response = await fetch(`${config.baseUrl}/api/v0/products`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    });
+
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const fetchImages = async (productId: string) => {
+  try {
+    const response = await fetch(`${config.baseUrl}/api/v0/product/images?id=${productId}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    });
+
+    return await response.json();
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export {
-  createUser,
-  signIn,
-  readImage,
-  update
+  createProduct,
+  fetchProduct,
+  fetchProducts,
+  fetchImages
 };

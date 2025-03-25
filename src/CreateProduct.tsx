@@ -4,12 +4,9 @@ import { Image, Upload } from 'antd';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 
 import { Carousel, Col, Row } from 'antd';
-import defaultImg from './assets/images/1.jpg';
-import img from './assets/images/2.jpg';
 
 import {
   Button,
-  DatePicker,
   Form,
   Input,
   InputNumber,
@@ -22,7 +19,8 @@ import {
 
 import { MdImage } from 'react-icons/md';
 
-const { RangePicker } = DatePicker;
+import { createProduct } from './api/product.api';
+
 const { TextArea } = Input;
 
 const normFile = (e: any) => {
@@ -31,8 +29,6 @@ const normFile = (e: any) => {
   }
   return e?.fileList;
 };
-
-
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -44,7 +40,7 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-const App: React.FC = () => {
+const NewProduct: React.FC = () => {
   const mobile = window.innerWidth < 500;
 
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -54,6 +50,9 @@ const App: React.FC = () => {
   const [previewList, setPreviewList] = useState([]);
 
   const [formDisabled, setFormDisabled] = useState(false);
+
+  const [category, setCategory] = useState('');
+  const [status, setStatus] = useState('AV');
 
   const [price, setPrice] = useState(0);
   const [currency, setCurrency] = useState('USD$');
@@ -130,10 +129,55 @@ const App: React.FC = () => {
     }
   }
 
+  const handleChangeCategory = (newCategory: string | null) => {
+    if (newCategory) {
+      setCategory(newCategory)
+    }
+  }
+
+  const handleChangeStatus = (newStatus: string | null) => {
+    if (newStatus) {
+      setStatus(newStatus)
+    }
+  }
+
   const updatePreviewList = async (fileList) => {
     const newList = await Promise.all(fileList.map(async (file: UploadFile) => await getBase64(file.originFileObj as FileType)))
     console.log('preview list:', newList)
     setPreviewList(newList);
+  };
+
+  const submit = async () => {
+    const user = localStorage.getItem('user')
+    if (user) {
+      const formData = new FormData();
+      const userId = JSON.parse(user)._id;
+      console.log('got local user id:', userId)
+      fileList.map((file) => {
+        if (file.originFileObj) {
+          formData.append(`images`, file.originFileObj);
+        }
+      })
+      userId && formData.append('userId', userId);
+      data.name && formData.append('name', data.name);
+      data.description && formData.append('description', data.description);
+      category && formData.append('category', category);
+      price && formData.append('price', String(price));
+      currency && formData.append('currency', currency)
+      status && formData.append('status', status);
+      contactMethod && formData.append('contactMethod', contactMethod);
+      data.location && formData.append('location', data.location);
+      phoneNumber && formData.append('phoneNumber', String(phoneNumber));
+      countryCode && formData.append('countryCode', countryCode);
+      email && formData.append('email', email);
+
+      const result = await createProduct(formData);
+      console.log('result:', result)
+
+      if (result.productId) {
+        window.location.href = `/product/${result.productId}`
+      }
+    }
   }
 
   const uploadButton = (
@@ -146,7 +190,7 @@ const App: React.FC = () => {
   return (
     <>
       <ConfigProvider
-        theme={{ algorithm: [theme.darkAlgorithm], token: { colorBgContainer: '#292929'} }}
+        theme={{ algorithm: [theme.darkAlgorithm], token: { colorBgContainer: '#292929' } }}
       >
         <div style={{ minHeight: '100vh' }}>
           <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 20 }, 18]}>
@@ -191,6 +235,7 @@ const App: React.FC = () => {
                   layout="horizontal"
                   disabled={formDisabled}
                   style={{ maxWidth: 600, color: 'white' }}
+                // action={}
                 >
                   <Form.Item label={<p>Upload</p>} valuePropName="fileList" getValueFromEvent={normFile}>
                     <Upload
@@ -238,6 +283,27 @@ const App: React.FC = () => {
                         onChange={handlePriceChange}
                       />
                     </Space.Compact>
+                  </Form.Item>
+                  <Form.Item label={<p>Category</p>}>
+                    <Select
+                      style={{}}
+                      onChange={handleChangeCategory}
+                    >
+                      <Select.Option value="computers">Computers & Electronics</Select.Option>
+                      <Select.Option value="vehicles">Vehicles</Select.Option>
+                      <Select.Option value="accomodation">Rooms to Rent</Select.Option>
+                      <Select.Option value="other">Other</Select.Option>
+                    </Select>
+                  </Form.Item>
+                  <Form.Item label={<p>Status</p>}>
+                    <Select
+                      defaultValue={'AV'}
+                      style={{}}
+                      onChange={handleChangeStatus}
+                    >
+                      <Select.Option value="AV">Available</Select.Option>
+                      <Select.Option value="UA">Sold</Select.Option>
+                    </Select>
                   </Form.Item>
                   <Form.Item label={<p>Contact Method</p>}>
                     <Select
@@ -301,7 +367,7 @@ const App: React.FC = () => {
                     <Rate />
                   </Form.Item>
                   <div style={{ maxWidth: 600, float: 'right', marginRight: 'auto' }}>
-                    <Button>Submit</Button>
+                    <Button onClick={submit}>Submit</Button>
                   </div>
                 </Form>
               </>
@@ -313,4 +379,4 @@ const App: React.FC = () => {
   )
 };
 
-export default App;
+export default NewProduct;
