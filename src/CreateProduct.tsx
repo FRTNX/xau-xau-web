@@ -291,7 +291,11 @@ const NewProduct: React.FC = () => {
                     >
                       <Select.Option value="computers">Computers & Electronics</Select.Option>
                       <Select.Option value="vehicles">Vehicles</Select.Option>
-                      <Select.Option value="accomodation">Rooms to Rent</Select.Option>
+                      <Select.Option value="accomodation">Accomodation: Houses, Rooms, Land</Select.Option>
+                      <Select.Option value="home_goods">Home Goods: Furniture & Appliances</Select.Option>
+                      <Select.Option value="services">Services</Select.Option>
+                      <Select.Option value="collectables">Art & Collectables</Select.Option>
+                      <Select.Option value="food_bev">Food & Beverages</Select.Option>
                       <Select.Option value="other">Other</Select.Option>
                     </Select>
                   </Form.Item>

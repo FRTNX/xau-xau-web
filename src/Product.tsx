@@ -1,29 +1,16 @@
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'
 import { Carousel, Col, Row } from 'antd';
-import type { GetProp, UploadFile, UploadProps } from 'antd';
+import { EditFilled, EditOutlined } from '@ant-design/icons';
 
-import { fetchImages, fetchProduct } from './api/product.api';
-import { useEffect, useState } from 'react';
+import { fetchProduct } from './api/product.api';
 import config from './config/config';
 
 const baseUrl = `${config.baseUrl}/api/v0/product/image`;
 
-// type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
-
-// const getBase64 = (file: FileType): Promise<string> =>
-//   new Promise((resolve, reject) => {
-//     const reader = new FileReader();
-//     reader.readAsDataURL(file);
-//     reader.onload = () => resolve(reader.result as string);
-//     reader.onerror = (error) => reject(error);
-//   });
-
 const Product = () => {
+  const { id } = useParams();
   const mobile = window.innerWidth < 500;
-  const { id } = useParams()
-  console.log('product id:', id)
-
-  // const [images, setImages] = useState([]);
 
   const [data, setData] = useState({
     _id: '67e27f0146e9aad23bfda25c',
@@ -43,7 +30,6 @@ const Product = () => {
 
   useEffect(() => {
     loadProduct();
-    // loadImages();
   }, []);
 
   const loadProduct = async () => {
@@ -52,14 +38,20 @@ const Product = () => {
     setData(result)
   }
 
-  // const loadImages = async () => {
-  //   const result = await fetchImages(id);
-  //   console.log('image result:', result)
-  //   const sliderImages = await Promise.all(result.map(async (image) => await getBase64(new Blob([image.data]))))
-  //   console.log('preview list:', sliderImages)
-  //   setImages(sliderImages)
-  // }
+  const EditButton = () => {
 
+    return (
+      <div style={{ float: 'right', paddingLeft: 10 }}>
+        <button
+          style={{ background: 'black', padding: 10, fontSize: 15 }}
+          onClick={() => window.location.href = `/edit/product/${id}`}
+        >
+          <EditFilled />
+          Edit Product
+        </button>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -82,7 +74,11 @@ const Product = () => {
             <div>
               <div style={{ fontSize: 28 }}>
                 <p style={{ display: 'inline-block' }}>{data.name}</p>
-                <p style={{ display: 'inline-block', float: 'right' }}>{data.currency}{" "}{Number(data.price).toFixed(2)}</p>
+                <p style={{ display: 'inline-block', float: 'right' }}>
+                  {data.currency}{" "}{Number(data.price).toFixed(2)}
+                  <EditButton />
+                </p>
+
               </div>
               <p style={{ lineHeight: 0, fontSize: 18 }}>{data.created}</p>
               <p style={{ fontSize: 18 }}>{data.location}</p>
