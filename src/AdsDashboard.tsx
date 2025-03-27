@@ -11,6 +11,10 @@ import {
   Legend
 } from 'recharts';
 
+import Example from './components/charts/RadialBarChart';
+
+import defaultImg from './assets/images/1.jpg';
+
 const random = (min, max) => Math.floor(Math.random() * (max - min)) + min;
 
 const generateData = (params, variation = 10, rows = 10) => {
@@ -32,34 +36,47 @@ const generateData = (params, variation = 10, rows = 10) => {
 const AdsDashboard = () => {
   const mobile = window.innerWidth < 500;
 
+  const [ads, setAds] = useState([
+    {
+      image: '',
+      views: 0,
+    },
+    {
+      image: '',
+      views: 0,
+    },
+  ])
+
   return (
     <>
       <Row style={{ width: '100%' }} gutter={[{ xs: 8, sm: 16, md: 24, lg: 20 }, 18]}>
         <Col style={{ width: '50%' }}>
           <p>Your Ads</p>
-          <Space.Compact
-            style={{ width: '100%', border: '2px solid black', borderRadius: 10, height: 300}}
-            >
-            <div style={{ width: '70%', borderRight: '2px solid black'}}>
-              Ad card
-            </div>
-            <div>
-              Ad stats
-            </div>
-          </Space.Compact>
-          <div style={{ padding: 10}}/>
-          <Space.Compact style={{ width: '100%', border: '2px solid black', borderRadius: 10, height: 300}}>
-            <div style={{ width: '70%', borderRight: '2px solid black'}}>
-              Ad card
-            </div>
-            <div>
-              Ad stats
-            </div>
-          </Space.Compact>
+        
+          {
+            ads.map((ad, index) => (
+              <div>
+                <Space.Compact
+                  style={{ width: '100%', border: '2px solid black', borderRadius: 10, height: 300 }}
+                >
+                  <div style={{ width: '70%', borderRight: '2px solid black' }}>
+                    Ad card
+                  </div>
+                  <div>
+                    Ad stats
+                    <Example />
+                  </div>
+                </Space.Compact>
+                <div style={{ padding: 10 }} />
+              </div>
+            ))
+          }
         </Col>
         <Col style={{ width: '50%' }}>
-          <p>Views Chart</p>
-          <AreaChart width={mobile ? (window.innerWidth - 30) : 700} height={300} data={generateData(['name', 'pv', 'uv'])} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+        <div style={{ display: 'inline-block', float: 'right'}}>
+            <button style={{ background: 'black'}}>New Ad</button>
+          </div>
+          <AreaChart width={mobile ? (window.innerWidth - 30) : 650} height={300} data={generateData(['name', 'pv', 'uv'])} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
             <XAxis dataKey="name" />
             <Tooltip />
             <CartesianGrid stroke="#f5f5f5" />
