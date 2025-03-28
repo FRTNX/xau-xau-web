@@ -118,7 +118,7 @@ const AdsDashboard = () => {
               >Create a New Ad</button>
             </div>
           </Space>
-          <p style={{ fontSize: 18, lineHeight: 0, fontFamily: 'monospace', paddingBottom: 0}}></p>
+          <p style={{ fontSize: 18, lineHeight: 0, fontFamily: 'monospace', paddingBottom: 10}}></p>
           <ResponsiveContainer height={300} width={'100%'} style={{ }}>
             <AreaChart data={generateData(['name', 'pv', 'uv'])} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
               <XAxis dataKey="name" />

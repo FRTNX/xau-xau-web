@@ -34,9 +34,22 @@ const fetchProduct = async (productId: string) => {
   }
 }
 
-const fetchProducts = async () => {
+const fetchProducts = async (category: string | null = null, limit: number | null = null) => {
   try {
-    const response = await fetch(`${config.baseUrl}/api/v0/products`, {
+    let query = ``;
+    if (category) {
+      query = `?category=${category}`
+    }
+
+    if (limit) {
+      if (query.length > 0) {
+        query = `${query}&&limit=${limit}`
+      } else {
+        query = `?limit=${limit}`
+      }
+    }
+
+    const response = await fetch(`${config.baseUrl}/api/v0/products${query}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -47,6 +60,22 @@ const fetchProducts = async () => {
     return await response.json();
   } catch (error) {
     console.log(error);
+  }
+}
+
+const fetchCategories = async () => {
+  try {
+    const response = await fetch(`${config.baseUrl}/api/v0/categories`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    });
+
+    return await response.json();
+  } catch (error) {
+    console.log(error)
   }
 }
 
@@ -70,5 +99,6 @@ export {
   createProduct,
   fetchProduct,
   fetchProducts,
-  fetchImages
+  fetchImages,
+  fetchCategories
 };

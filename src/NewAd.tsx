@@ -3,7 +3,7 @@
 const NewAd = () => {
 
   return (
-    <div>
+    <div style={{ minHeight: '30vh'}}>
       New Ad
     </div>
   )
