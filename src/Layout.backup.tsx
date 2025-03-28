@@ -51,37 +51,20 @@ const MainLayout: React.FC = ({ children }) => {
     { title: 'Product' }
   ]);
   useEffect(() => {
-    console.log(window.location.pathname)
+    console.log('window location:', window.location.pathname)
     updateBreadcrumbs();
   }, [window.location]);
 
-  const menuMapper = () => {
-    const path = window.location.pathname;
-    const homePaths = ['/']
-    if (homePaths.includes(path)) {
-      return 'Home'
-    }
-    else if (['/advertisers/dashboard'].includes(path)) {
-      return 'Ads Dashboard'
-    }
-
-    else if (['/new/product'].includes(path)) {
-      return 'Sell Something'
-    }
-
-    // unregistered path
-    else {
-      return 'Home'
-    }
-  }
   const updateBreadcrumbs = () => {
     const pathVariables = window.location.pathname.split('/');
+    console.log('path vars:', pathVariables)
     const newCrumbs = [{ title: 'Home' }];
     pathVariables.map((item) => {
       if (Object.keys(CRUMB_MAPPER).includes(item)) {
         newCrumbs.push({ title: CRUMB_MAPPER[item] });
       }
     })
+    console.log('created new crumbs:', newCrumbs)
     setBreadcrumbs(newCrumbs);
   }
 
@@ -110,7 +93,7 @@ const MainLayout: React.FC = ({ children }) => {
         <TypeAnimation
           sequence={[
             "Xau",
-            15000,
+            6000,
             'Xau-Xau',
             1000,
             'Xawu-Xawu',
@@ -150,8 +133,7 @@ const MainLayout: React.FC = ({ children }) => {
               <Menu
                 className='dark-primary'
                 mode="inline"
-                // defaultSelectedKeys={[selectedMenuItem]}
-                selectedKeys={[menuMapper()]}
+                defaultSelectedKeys={[selectedMenuItem]}
                 defaultOpenKeys={['sub1']}
                 style={{ height: '100%' }}
                 items={items1}
@@ -194,15 +176,10 @@ const MainLayout: React.FC = ({ children }) => {
             </Content>
           </div>
           <Footer className='dark-primary' style={{ textAlign: 'center', color: 'white' }}>
-            ©{new Date().getFullYear()} Xau-Xau
+            ©{new Date().getFullYear()} Xau-Xaw
             <div style={{ height: 10 }} />
             <span style={{}}>Made with ❤️ by
-              <img
-                src={parent}
-                height={23}
-                onClick={() => window.location.href = 'https://zugzwang.co.zw'}
-                style={{ verticalAlign: 'bottom', paddingLeft: 3 }}
-              /></span>
+              <img src={parent} height={23} onClick={() => window.location.href = 'https://zugzwang.co.zw'} style={{ verticalAlign: 'bottom' }} /></span>
           </Footer>
         </Layout>
       </ConfigProvider>
