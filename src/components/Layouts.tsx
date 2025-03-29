@@ -40,16 +40,16 @@ const layoutStyle = {
   maxWidth: 'calc(50% - 8px)',
 };
 
-const App: React.FC = () => (
+const Layouts: React.FC = () => (
   <Flex gap="middle" wrap>
     <Layout style={layoutStyle}>
-      <Header style={headerStyle}>Header</Header>
+      <Header style={headerStyle}>Header 1</Header>
       <Content style={contentStyle}>Content</Content>
       <Footer style={footerStyle}>Footer</Footer>
     </Layout>
 
     <Layout style={layoutStyle}>
-      <Header style={headerStyle}>Header</Header>
+      <Header style={headerStyle}>Header 2</Header>
       <Layout>
         <Sider width="25%" style={siderStyle}>
           Sider
@@ -60,7 +60,7 @@ const App: React.FC = () => (
     </Layout>
 
     <Layout style={layoutStyle}>
-      <Header style={headerStyle}>Header</Header>
+      <Header style={headerStyle}>Header 3</Header>
       <Layout>
         <Content style={contentStyle}>Content</Content>
         <Sider width="25%" style={siderStyle}>
@@ -75,7 +75,7 @@ const App: React.FC = () => (
         Sider
       </Sider>
       <Layout>
-        <Header style={headerStyle}>Header</Header>
+        <Header style={headerStyle}>Header 4</Header>
         <Content style={contentStyle}>Content</Content>
         <Footer style={footerStyle}>Footer</Footer>
       </Layout>
@@ -83,4 +83,4 @@ const App: React.FC = () => (
   </Flex>
 );
 
-export default App;
+export default Layouts;

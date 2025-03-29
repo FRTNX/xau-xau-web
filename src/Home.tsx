@@ -11,7 +11,6 @@ const baseUrl = `${config.baseUrl}/api/v0/product/thumbnail`;
 
 
 const CategoryListing = ({ category, title }) => {
-  // todo: group items within categories
   const [items, setItems] = useState([
     {
       _id: '67e27f0146e9aad23bfda25c',
@@ -23,14 +22,9 @@ const CategoryListing = ({ category, title }) => {
     }
   ]);
 
-
-  if (3 < 1) {
-    setItems(items)
-  }
-
   useEffect(() => {
     populateProducts();
-  }, [])
+  }, []);
 
   const populateProducts = async () => {
     const result = await fetchProducts(category, 4);

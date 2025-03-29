@@ -4,6 +4,8 @@ import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme, ConfigProvider } from 'antd';
 import { TypeAnimation } from 'react-type-animation'
 
+import { MenuOutlined } from '@ant-design/icons';
+
 import brand from './assets/images/logo-square.png';
 import parent from './assets/images/zugzwang.png';
 import './xau.css';
@@ -44,6 +46,8 @@ const CRUMB_MAPPER = {
 
 const MainLayout: React.FC = ({ children }) => {
   const mobile = window.innerWidth < 500;
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(mobile ? true : false);
+  const [desktopSidebarCollapsed, setDesktopSidebarCollapsed] = useState(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState('Home');
   const [breadcrumbs, setBreadcrumbs] = useState([
     { title: 'Home' },
@@ -71,7 +75,7 @@ const MainLayout: React.FC = ({ children }) => {
 
     // unregistered path
     else {
-      return 'Home'
+      return ''
     }
   }
   const updateBreadcrumbs = () => {
@@ -89,8 +93,24 @@ const MainLayout: React.FC = ({ children }) => {
     window.location.href = '/signin'
   }
 
+  const toggleSidebar = () => {
+    console.log('toggling sidebar')
+    if (sidebarCollapsed) {
+      setSidebarCollapsed(false);
+    } else {
+      setSidebarCollapsed(true);
+    }
+  }
+
+  const toggleSidebarDesktop = () => {
+    if (desktopSidebarCollapsed) {
+      setDesktopSidebarCollapsed(false);
+    } else {
+      setDesktopSidebarCollapsed(true);
+    }
+  }
+
   const handleMenuSelect = (event) => {
-    console.log('menu click event:', event)
     setSelectedMenuItem(event.key);
 
     if (event.key === 'Home') {
@@ -106,7 +126,7 @@ const MainLayout: React.FC = ({ children }) => {
 
   const Logo = () => {
     return (
-      <div style={{}}>
+      <div style={{}} onClick={() => window.location.href = '/'}>
         <TypeAnimation
           sequence={[
             "Xau",
@@ -134,11 +154,11 @@ const MainLayout: React.FC = ({ children }) => {
         {
           !mobile && (
             <Sider
-              style={{ paddingTop: 115 }}
+              style={{ paddingTop: 150 }}
               className='dark-primary'
               breakpoint="lg"
-              collapsedWidth="0"
-              // collapsed={collapsed}
+              collapsedWidth="50"
+              collapsed={desktopSidebarCollapsed}
               onBreakpoint={(broken) => {
                 console.log(broken);
               }}
@@ -150,7 +170,6 @@ const MainLayout: React.FC = ({ children }) => {
               <Menu
                 className='dark-primary'
                 mode="inline"
-                // defaultSelectedKeys={[selectedMenuItem]}
                 selectedKeys={[menuMapper()]}
                 defaultOpenKeys={['sub1']}
                 style={{ height: '100%' }}
@@ -161,28 +180,47 @@ const MainLayout: React.FC = ({ children }) => {
           )
         }
         <Layout style={{}}>
-          <Header className='dark-primary' style={{ paddingLeft: 0, display: 'flex', alignItems: 'center', height: 100 }}>
-            <div style={{ marginTop: 'auto', paddingLeft: 20, paddingTop: 5 }} onClick={() => window.location.href = '/'}>
-              {/* <img src={logo} height={106} /> */}
+          <Header className='dark-primary' style={{ paddingLeft: 0, display: 'flex', alignItems: 'center', height: 130 }}>
+            {
+              !mobile && (
+                <div
+                  onClick={toggleSidebarDesktop}
+                  style={{ marginTop: -50, paddingLeft: 15, color: 'white', fontSize: 25 }}
+                >
+                  <MenuOutlined size={30} />
+                </div>
+              )
+            }
+
+            <div style={{ marginTop: 'auto', paddingLeft: 20, paddingTop: 5 }} >
+              {
+                mobile && (
+                  <div
+                    onClick={toggleSidebar}
+                    style={{ position: 'absolute', right: 30, top: 10, color: 'white', fontSize: 20 }}
+                  >
+                    <MenuOutlined size={30} />
+                  </div>
+                )
+              }
               <Logo />
-              <p style={{ marginTop: 0, fontSize: 14, lineHeight: 0, color: 'grey' }}>
+              <p style={{ marginTop: 0, fontSize: 14, lineHeight: 0, color: 'grey', paddingBottom: 10 }}>
                 Zimbabwe's Leading Classifieds
               </p>
+              <Breadcrumb
+                items={breadcrumbs}
+                style={{ margin: '16px 0', paddingLeft: 0, color: 'white' }}
+              />
             </div>
             {/* <p>{JSON.parse(localStorage.getItem('user')).username}</p> */}
           </Header>
-          <div className='dark-primary' style={{ borderRadius: 0 }}>
-            <Breadcrumb
-              items={breadcrumbs}
-              style={{ margin: '16px 0', paddingLeft: 20, color: 'white' }}
-            />
-            <Content style={{ margin: '24px 16px 0', minHeight: '100vh' }}>
+          <Layout className='dark-primary' style={{ borderRadius: 0 }}>
+            <Content style={{ margin: '24px 16px 0', minHeight: '100vh', filter: mobile && !sidebarCollapsed ? 'blur(6px)' : 'none' }}>
               <div
                 className='dark-secondary'
                 style={{
                   padding: 24,
                   minHeight: 360,
-                  // background: colorBgContainer,
                   borderRadius: 10,
                 }}
               >
@@ -192,7 +230,35 @@ const MainLayout: React.FC = ({ children }) => {
                 </div>
               </div>
             </Content>
-          </div>
+            {
+              mobile && (
+                <Sider
+                  style={{ paddingTop: 20 }}
+                  className='dark-primary'
+                  breakpoint="lg"
+                  collapsed={sidebarCollapsed}
+                  collapsedWidth="1"
+                  onBreakpoint={(broken) => {
+                    console.log(broken);
+                  }}
+                  onCollapse={(collapsed, type) => {
+                    console.log(collapsed, type);
+                  }}
+                >
+                  <div className="demo-logo-vertical" />
+                  <Menu
+                    className='dark-primary'
+                    mode="inline"
+                    selectedKeys={[menuMapper()]}
+                    defaultOpenKeys={['sub1']}
+                    style={{ height: '100%' }}
+                    items={items1}
+                    onClick={handleMenuSelect}
+                  />
+                </Sider>
+              )
+            }
+          </Layout>
           <Footer className='dark-primary' style={{ textAlign: 'center', color: 'white' }}>
             ©{new Date().getFullYear()} Xau-Xau
             <div style={{ height: 10 }} />
