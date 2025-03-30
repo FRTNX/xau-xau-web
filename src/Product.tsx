@@ -3,7 +3,9 @@ import { useParams } from 'react-router-dom'
 import { Carousel, Col, Row } from 'antd';
 import { EditFilled, EditOutlined } from '@ant-design/icons';
 
+import { formatPrice } from './utils';
 import { fetchProduct } from './api/product.api';
+
 import config from './config/config';
 
 const baseUrl = `${config.baseUrl}/api/v0/product/image`;
@@ -41,13 +43,12 @@ const Product = () => {
   const EditButton = () => {
 
     return (
-      <div style={{ float: 'right', paddingLeft: 10 }}>
+      <div style={{ float: 'right', paddingLeft: 10, marginTop: -4 }}>
         <button
-          style={{ background: 'black', padding: 10, fontSize: 15 }}
+          style={{ background: 'black', padding: 10, fontSize: 15, color: 'rgb(249, 249, 249)' }}
           onClick={() => window.location.href = `/edit/product/${id}`}
         >
           <EditFilled />
-          Edit Product
         </button>
       </div>
     )
@@ -75,7 +76,7 @@ const Product = () => {
               <div style={{ fontSize: 28 }}>
                 <p style={{ display: 'inline-block' }}>{data.name}</p>
                 <p style={{ display: 'inline-block', float: 'right' }}>
-                  {data.currency}{" "}{Number(data.price).toFixed(2)}
+                  {data.currency}{" "}{formatPrice(data.price)}
                   <EditButton />
                 </p>
 

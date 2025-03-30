@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme, ConfigProvider } from 'antd';
-import { TypeAnimation } from 'react-type-animation'
+import { TypeAnimation } from 'react-type-animation';
 
 import { MenuOutlined } from '@ant-design/icons';
+import { MdEvStation, MdWorkspaces, MdWebAsset, MdBarChart, MdUpcoming } from 'react-icons/md';
+import { DollarCircleOutlined } from '@ant-design/icons';
+import { PieChartOutlined } from '@ant-design/icons';
+
 
 import brand from './assets/images/logo-square.png';
 import parent from './assets/images/zugzwang.png';
@@ -12,9 +16,16 @@ import './xau.css';
 
 const { Header, Content, Footer, Sider } = Layout;
 
-const items1: MenuProps['items'] = ['Home', 'Ads Dashboard', 'Sell Something', '45'].map((key) => ({
-  key,
-  label: `${key}`,
+const items1: MenuProps['items'] = [
+  [<MdWorkspaces />, 'Home'],
+  [<PieChartOutlined />, 'Ads Dashboard'],
+  [<DollarCircleOutlined />, 'Sell Something'],
+  [<MdBarChart />, 'Your Products'],
+  [<MdUpcoming />, 'Auctions']
+].map((key) => ({
+  key: key[1],
+  icon: key[0],
+  label: `${key[1]}`,
 }));
 
 const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
@@ -202,7 +213,6 @@ const MainLayout: React.FC = ({ children }) => {
                 </div>
               )
             }
-
             <div style={{ marginTop: 'auto', paddingLeft: 20, paddingTop: 5 }} >
               {
                 mobile && (

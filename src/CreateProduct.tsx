@@ -21,6 +21,8 @@ import { MdImage } from 'react-icons/md';
 
 import { createProduct } from './api/product.api';
 
+import { formatPrice } from './utils';
+
 const { TextArea } = Input;
 
 const normFile = (e: any) => {
@@ -220,7 +222,7 @@ const NewProduct: React.FC = () => {
               <div>
                 <div style={{ fontSize: 28 }}>
                   <p style={{ display: 'inline-block' }}>{data.name}</p>
-                  <p style={{ display: 'inline-block', float: 'right' }}>{currency}{" "}{Number(price).toFixed(2)}</p>
+                  <p style={{ display: 'inline-block', float: 'right' }}>{currency}{" "}{formatPrice(price)}</p>
                 </div>
                 <p style={{ lineHeight: 0, fontSize: 18 }}>{data.created}</p>
                 <p style={{ fontSize: 18 }}>{data.location}</p>
