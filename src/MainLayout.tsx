@@ -41,7 +41,10 @@ const CRUMB_MAPPER = {
   dashboard: 'Dashboard',
   new: 'New',
   edit: 'Edit',
-  product: 'Product'
+  product: 'Product',
+  signin: 'Welcome Back',
+  register: 'Welcome',
+  ad: 'Ad'
 }
 
 const MainLayout: React.FC = ({ children }) => {
@@ -49,13 +52,9 @@ const MainLayout: React.FC = ({ children }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(mobile ? true : false);
   const [desktopSidebarCollapsed, setDesktopSidebarCollapsed] = useState(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState('Home');
-  const [breadcrumbs, setBreadcrumbs] = useState([
-    { title: 'Home' },
-    { title: 'New' },
-    { title: 'Product' }
-  ]);
+  const [breadcrumbs, setBreadcrumbs] = useState([]);
+
   useEffect(() => {
-    console.log(window.location.pathname)
     updateBreadcrumbs();
   }, [window.location]);
 
@@ -78,9 +77,21 @@ const MainLayout: React.FC = ({ children }) => {
       return ''
     }
   }
+
+  // todo: move to utils
+  const equalArrays = (arr1, arr2) => {
+    return arr1.length === arr2.length && arr1.every((value, index) => value === arr2[index])
+  }
+
   const updateBreadcrumbs = () => {
     const pathVariables = window.location.pathname.split('/');
-    const newCrumbs = [{ title: 'Home' }];
+    console.log('path vars:', pathVariables)
+    let newCrumbs = [{ title: '' }];
+    
+    if (equalArrays(pathVariables, ['', ''])) {
+      newCrumbs.push({ title: ''}, { title: ''});
+    }
+
     pathVariables.map((item) => {
       if (Object.keys(CRUMB_MAPPER).includes(item)) {
         newCrumbs.push({ title: CRUMB_MAPPER[item] });
@@ -209,7 +220,7 @@ const MainLayout: React.FC = ({ children }) => {
               </p>
               <Breadcrumb
                 items={breadcrumbs}
-                style={{ margin: '16px 0', paddingLeft: 0, color: 'white' }}
+                style={{ margin: '16px 0', marginLeft: -5, paddingLeft: 0, color: 'white' }}
               />
             </div>
             {/* <p>{JSON.parse(localStorage.getItem('user')).username}</p> */}
@@ -260,7 +271,7 @@ const MainLayout: React.FC = ({ children }) => {
             }
           </Layout>
           <Footer className='dark-primary' style={{ textAlign: 'center', color: 'white' }}>
-            ©{new Date().getFullYear()} Xau-Xau
+            © {new Date().getFullYear()} Xau-Xau
             <div style={{ height: 10 }} />
             <span style={{}}>Made with ❤️ by
               <img

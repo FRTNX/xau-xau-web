@@ -4,7 +4,7 @@ import { Row, Col } from "antd";
 import config from "./config/config";
 
 import { fetchProducts, fetchCategories } from "./api/product.api";
-
+import { EyeOutlined } from "@ant-design/icons";
 import './xau.css'
 
 const baseUrl = `${config.baseUrl}/api/v0/product/thumbnail`;
@@ -17,8 +17,10 @@ const CategoryListing = ({ category, title }) => {
       name: 'Item Title',
       price: 7,
       currency: 'USD$',
+      views: 0,
       location: 'Bulawayo',
-      created: '2025-03-25T10:01:37.555Z'
+      created: '2025-03-25T10:01:37.555Z',
+
     }
   ]);
 
@@ -38,21 +40,25 @@ const CategoryListing = ({ category, title }) => {
         items.length > 0 && (
           <div style={{ verticalAlign: 'top', width: '100%' }}>
             <p>{title}</p>
-            <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 20 }, 18]}>
+            <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 15 }, 18]}>
               {
                 items.map((item, index) => (
                   <Col xs={24} sm={12} md={12} lg={12} xl={6}>
-                    <div style={{}} key={index}>
+                    <div style={{ background: 'linear-gradient(rgb(112, 114, 115), black 50%)', height: '100%', padding: 0, borderRadius: 5, }} key={index}>
                       <img src={baseUrl + `?id=${item._id}`} width={'100%'} height={238} style={{ objectFit: 'cover' }} />
-                      <div style={{ lineHeight: 0 }}>
+                      <div style={{ lineHeight: 0, padding: 5 }}>
                         <div>
                           <p style={{ display: 'inline-block' }}>{item.name}</p>
                           <p style={{ display: 'inline-block', float: 'right' }}>{item.currency}{" "}{Number(item.price).toFixed(2)}</p>
                         </div>
-                        <p>{item.location}</p>
+                        <div>
+                          <p style={{ display: 'inline-block' }}>{item.location}</p>
+                          <div style={{ display: 'inline-block', float: 'right', marginTop: 4 }}><EyeOutlined style={{ verticalAlign: 'middle', marginTop: -1 }} /> {Number(item.views)}</div>
+                        </div>
                       </div>
-                      <div style={{ float: 'right' }}>
+                      <div style={{ float: 'right', paddingBottom: 5, paddingRight: 5 }}>
                         <button
+                          style={{ borderRadius: 0 }}
                           onClick={() => window.location.href = `/product/${item._id}`}
                         >
                           view
