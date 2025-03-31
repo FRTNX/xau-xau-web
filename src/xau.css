@@ -40,3 +40,20 @@ li {
   color: #ffffff
 }
 
+.glowing-text {
+
+  font-size: 18px; /* Adjust the size as needed */
+  color: #fff; /* You can change the text color if needed */
+  /* animation: glow 2s ease infinite li; */
+
+  animation: glow 20s linear infinite;
+  /* opacity: 0;
+  transition: opacity .3s ease-in-out;
+  border-radius: 5px; */
+}
+
+@keyframes glow {
+  0% { background-position: 0 0; }
+  50% { background-position: 400% 0; }
+  100% { background-position: 0 0; }
+}

@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'
 import { Carousel, Col, Row } from 'antd';
+
 import { EditFilled, EditOutlined } from '@ant-design/icons';
+import { MdLocationCity } from 'react-icons/md';
+import { MdLocationPin } from 'react-icons/md';
 
 import { formatPrice } from './utils';
 import { fetchProduct } from './api/product.api';
@@ -87,16 +90,9 @@ const Product = () => {
             </div>
           </Col>
           <Col xs={24} sm={12} md={12} lg={12} xl={9}>
-            <div style={{ fontSize: 20, lineHeight: 0 }}>
-              {/* <p>Acer Laptop</p>
-              <p>Acer Laptop</p>
-              <p>Acer Laptop</p>
-              <p>Acer Laptop</p>
-              <p>Acer Laptop</p>
-              <p>Acer Laptop</p>
-              <p>Acer Laptop</p>
-              <p>Acer Laptop</p> */}
-            </div>
+           <div style={{ textAlign: 'center' }}>
+            <MdLocationPin size={200}/>
+           </div>
           </Col>
         </Row>
       </div>
