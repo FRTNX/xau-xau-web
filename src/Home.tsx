@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Row, Col } from "antd";
+import { Row, Col, Space, Select } from "antd";
 
 import config from "./config/config";
 
@@ -12,6 +12,8 @@ import { formatPrice, shuffleArray } from "./utils";
 
 import "./components/fancy-buttons/hover.glow.css";
 import './xau.css';
+
+import Selectables from "./components/Selectable";
 
 const baseUrl = `${config.baseUrl}/api/v0/product/thumbnail`;
 
@@ -131,6 +133,7 @@ const CategoryListing = ({ category, title }) => {
 }
 
 const Home = () => {
+  const mobile = window.innerWidth < 500;
   const [categories, setCategories] = useState({});
 
   useEffect(() => {
@@ -145,9 +148,57 @@ const Home = () => {
 
   return (
     <>
+      <Space.Compact style={{ float: 'left', paddingBottom:0, width: '100%' }}>
+        <div
+          style={{
+            border: '2px solid rgb(57, 113, 30)',
+            height: 32.5,
+            padding: 5,
+            borderTopLeftRadius: 5,
+            borderBottomLeftRadius: 5,
+            background: 'rgb(26, 59, 8)',
+            // color: 'black'
+          }}>
+          <span>Filters</span>
+        </div>
+        <Select
+          // defaultValue="active"
+          placeholder={'Category'}
+          style={{ width: 120 }}
+          // onChange={handleChange}
+          options={[
+            { value: 'active', label: 'ACTIVE' },
+            { value: 'dormant', label: 'DORMANT' },
+            { value: 'all', label: 'ALL' },
+          ]}
+        />
+        <Select
+          // defaultValue="active"
+          placeholder={'Price'}
+          style={{ width: 120 }}
+          // onChange={handleChange}
+          options={[
+            { value: 'active', label: 'ACTIVE' },
+            { value: 'dormant', label: 'DORMANT' },
+            { value: 'all', label: 'ALL' },
+          ]}
+        />
+        <Select
+          // defaultValue="active"
+          placeholder={'Location'}
+          style={{ width: 120 }}
+          // onChange={handleChange}
+          options={[
+            { value: 'active', label: 'ACTIVE' },
+            { value: 'dormant', label: 'DORMANT' },
+            { value: 'all', label: 'ALL' },
+          ]}
+        />
+      </Space.Compact>
+      {/* <Selectables /> */}
       {
         shuffleArray(Object.keys(categories)).map((category) => (
-          <div>
+          <div style={{ paddingTop: 40}}>
             <CategoryListing category={category} title={categories[category]} />
           </div>
         ))

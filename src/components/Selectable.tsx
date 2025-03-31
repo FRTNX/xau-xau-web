@@ -109,7 +109,7 @@ const tagRender: TagRender = (props) => {
   );
 };
 
-const App: React.FC = () => (
+const Selectables: React.FC = () => (
   <>
     <Select
       mode="multiple"
@@ -125,4 +125,4 @@ const App: React.FC = () => (
   </>
 );
 
-export default App;
+export default Selectables;
