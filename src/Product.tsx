@@ -44,11 +44,10 @@ const Product = () => {
   }
 
   const EditButton = () => {
-
     return (
       <div style={{ float: 'right', paddingLeft: 10, marginTop: -4 }}>
         <button
-          style={{ background: 'black', padding: 10, fontSize: 15, color: 'rgb(249, 249, 249)' }}
+          style={{ background: 'black', padding: mobile ? 7 : 10, fontSize: mobile ? 10 : 15, color: 'rgb(249, 249, 249)' }}
           onClick={() => window.location.href = `/edit/product/${id}`}
         >
           <EditFilled />
@@ -76,23 +75,25 @@ const Product = () => {
               }
             </Carousel>
             <div>
-              <div style={{ fontSize: 28 }}>
-                <p style={{ display: 'inline-block' }}>{data.name}</p>
-                <p style={{ display: 'inline-block', float: 'right' }}>
+              <div style={{  marginTop: -10 }}>
+                <p style={{ display: 'inline-block', fontSize: mobile ? 18 : 25 }}>{data.name}</p>
+                <p style={{ display: 'inline-block', float: 'right', fontSize: mobile ? 18 : 25 }}>
                   {data.currency}{" "}{formatPrice(data.price)}
-                  <EditButton />
+                  {
+                    !mobile && <EditButton />
+                  }
                 </p>
 
               </div>
-              <p style={{ lineHeight: 0, fontSize: 18 }}>{data.created}</p>
-              <p style={{ fontSize: 18 }}>{data.location}</p>
-              <p style={{ fontSize: 16 }}>{data.description}</p>
+              <p style={{ lineHeight: 0, fontSize: mobile ? 12 : 15, marginTop: -10, color: 'grey' }}>{'5 days ago'}</p>
+              <p style={{ fontSize: mobile ? 15 : 16, color: 'grey', marginTop: 27 }}><MdLocationPin style={{ marginBottom: -2, color: 'green'}} />{data.location}</p>
+              <p style={{ fontSize: mobile ? 15 : 16 }}>{data.description}</p>
             </div>
           </Col>
           <Col xs={24} sm={12} md={12} lg={12} xl={9}>
-           <div style={{ textAlign: 'center' }}>
-            <MdLocationPin size={200}/>
-           </div>
+            <div style={{ textAlign: 'center' }}>
+              <MdLocationPin size={200} />
+            </div>
           </Col>
         </Row>
       </div>
