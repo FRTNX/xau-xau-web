@@ -18,19 +18,19 @@ const Product = () => {
   const mobile = window.innerWidth < 500;
 
   const [data, setData] = useState({
-    _id: '67e27f0146e9aad23bfda25c',
-    owner: '67de7d13f87fe73317c39edc',
-    name: 'Item Title',
-    description: 'Item Description.',
-    category: 'computers',
-    price: 7,
+    _id: '',
+    owner: '',
+    name: '',
+    description: '',
+    category: '',
+    price: 0,
     images: [],
-    currency: 'USD$',
-    status: 'AV',
-    contactMethod: 'MAIL',
-    location: 'Bulawayo',
-    created: '2025-03 - 25T10:01: 37.555Z',
-    email: 'frtnx@email.com',
+    currency: '',
+    status: '',
+    contactMethod: '',
+    location: '',
+    created: '',
+    email: '',
   });
 
   useEffect(() => {

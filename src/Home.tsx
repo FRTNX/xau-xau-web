@@ -60,18 +60,12 @@ const CategoryListing = ({ category, title }) => {
     <>
       {
         items.length > 0 && (
-          <div style={{ verticalAlign: 'top', width: '100%' }}>
+          <div style={{ verticalAlign: 'top', width: '100%', paddingTop: 40 }}>
             <p
               className="glowing-text"
               style={{
                 fontSize: mobile ? 23 : 28,
                 color: 'rgb(255, 255, 255)',
-                // textShadow: '0 0 10px #fff, 0 0 120px #fff, 0 0 13px #fff',
-                // background: 'linear-gradient(45deg, grey, black)',
-                // backgroundSize: '400%',
-                // animation: 'glowing 20s linear infinite',
-                // fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
-                // filter: 'blur(1px)',
                 marginBottom: 5,
               }}
             >{title}</p>
@@ -94,8 +88,6 @@ const CategoryListing = ({ category, title }) => {
                               display: 'inline-block',
                               maxWidth: 250,
                               fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
-                              // fontSize: 14,
-                              // color: 'rgb(197, 165, 36)'
                             }}
                           >
                             {formatString(item.name, 32)}
@@ -198,7 +190,7 @@ const Home = () => {
       {/* <Selectables /> */}
       {
         shuffleArray(Object.keys(categories)).map((category) => (
-          <div style={{ paddingTop: 40}}>
+          <div style={{ }}>
             <CategoryListing category={category} title={categories[category]} />
           </div>
         ))
