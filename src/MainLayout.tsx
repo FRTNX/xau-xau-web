@@ -5,10 +5,9 @@ import { Breadcrumb, Layout, Menu, theme, ConfigProvider } from 'antd';
 import { TypeAnimation } from 'react-type-animation';
 
 import { MenuOutlined } from '@ant-design/icons';
-import { MdEvStation, MdWorkspaces, MdWebAsset, MdBarChart, MdUpcoming } from 'react-icons/md';
+import { MdWorkspaces, MdBarChart, MdUpcoming } from 'react-icons/md';
 import { DollarCircleOutlined } from '@ant-design/icons';
 import { PieChartOutlined } from '@ant-design/icons';
-
 
 import brand from './assets/images/logo-square.png';
 import parent from './assets/images/zugzwang.png';
@@ -287,7 +286,7 @@ const MainLayout: React.FC = ({ children }) => {
               <img
                 src={parent}
                 height={23}
-                onClick={() => window.location.href = 'https://zugzwang.co.zw'}
+                onClick={() => window.open('https://zugzwang.co.zw')}
                 style={{ verticalAlign: 'bottom', paddingLeft: 3 }}
               /></span>
           </Footer>

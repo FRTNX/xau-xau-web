@@ -103,7 +103,7 @@ const CategoryListing = ({ category, title }) => {
                       </div>
                       <div style={{ float: 'right', paddingBottom: 5, paddingRight: 5 }}>
                         <button
-                          class="glow-on-hover"
+                          className="glow-on-hover"
                           style={{ borderRadius: 0 }}
                           onClick={() => window.location.href = `/product/${item._id}`}
                         >
@@ -127,6 +127,7 @@ const CategoryListing = ({ category, title }) => {
 const Home = () => {
   const mobile = window.innerWidth < 500;
   const [categories, setCategories] = useState({});
+  const [categoryOptions, setCategoryOptions] = useState<Object>([])
 
   useEffect(() => {
     populateCategories();
@@ -136,6 +137,9 @@ const Home = () => {
     const result = await fetchCategories();
     console.log('categories from server:', result)
     setCategories(result);
+    const options = Object.keys(result).map((category) =>  ({ value: category, label: result[category] }))
+    console.log('assembled cat options:', options)
+    setCategoryOptions(options)
   }
 
   return (
@@ -158,11 +162,7 @@ const Home = () => {
           placeholder={'Category'}
           style={{ width: 120 }}
           // onChange={handleChange}
-          options={[
-            { value: 'active', label: 'ACTIVE' },
-            { value: 'dormant', label: 'DORMANT' },
-            { value: 'all', label: 'ALL' },
-          ]}
+          options={categoryOptions}
         />
         <Select
           // defaultValue="active"
