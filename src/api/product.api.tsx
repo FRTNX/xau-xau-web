@@ -63,6 +63,23 @@ const fetchProducts = async (category: string | null = null, limit: number | nul
   }
 }
 
+const productEmail = async (params) => {
+  try {
+    const response = await fetch(`${config.baseUrl}/api/v0/product/email`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(params)
+    });
+
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const fetchCategories = async () => {
   try {
     const response = await fetch(`${config.baseUrl}/api/v0/categories`, {
@@ -100,5 +117,6 @@ export {
   fetchProduct,
   fetchProducts,
   fetchImages,
-  fetchCategories
+  fetchCategories,
+  productEmail
 };

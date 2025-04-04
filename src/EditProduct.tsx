@@ -222,7 +222,6 @@ const EditProduct: React.FC = () => {
         theme={{ algorithm: [theme.darkAlgorithm], token: { colorBgContainer: '#292929' } }}
       >
         <div style={{ minHeight: '100vh' }}>
-            <div style={{ fontSize: mobile ? 20 : 25}}>Edit Product</div>
           <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 20 }, 18]}>
             <Col xs={24} sm={12} md={12} lg={12} xl={15}>
               <Carousel arrows infinite={false} autoplay={{ dotDuration: true }} autoplaySpeed={5000}>

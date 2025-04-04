@@ -17,7 +17,7 @@ import {
   theme
 } from 'antd';
 
-import { MdImage } from 'react-icons/md';
+import { MdImage, MdLocationPin } from 'react-icons/md';
 
 import { createProduct } from './api/product.api';
 
@@ -215,18 +215,20 @@ const NewProduct: React.FC = () => {
                 previewList.length === 0 && (
                   <div style={{ height: mobile ? 400 : 600, textAlign: 'center' }}>
                     <MdImage size={mobile ? 250 : 400} color='grey' />
-                    <p>Uploaded images will appear here.</p>
+                    <p style={{ fontSize: mobile ? 14 : 16 }}>Uploaded images will appear here.</p>
                   </div>
                 )
               }
               <div>
-                <div style={{ fontSize: 28 }}>
-                  <p style={{ display: 'inline-block' }}>{data.name}</p>
-                  <p style={{ display: 'inline-block', float: 'right' }}>{currency}{" "}{formatPrice(price)}</p>
+                <div style={{ marginTop: -10 }}>
+                  <p style={{ display: 'inline-block', fontSize: mobile ? 18 : 25 }}>{data.name}</p>
+                  <p style={{ display: 'inline-block', float: 'right', fontSize: mobile ? 18 : 25 }}>
+                    {currency}{" "}{formatPrice(price)}
+                  </p>
                 </div>
-                <p style={{ lineHeight: 0, fontSize: 18 }}>{data.created}</p>
-                <p style={{ fontSize: 18 }}>{data.location}</p>
-                <p style={{ fontSize: 16 }}>{data.description}</p>
+                <p style={{ lineHeight: 0, fontSize: mobile ? 12 : 15, marginTop: -10, color: 'grey' }}>{'5 days ago'}</p>
+                <p style={{ fontSize: mobile ? 15 : 16, color: 'grey', marginTop: 27 }}><MdLocationPin style={{ marginBottom: -2, color: 'green' }} />{data.location}</p>
+                <p style={{ fontSize: mobile ? 15 : 16 }}>{data.description}</p>
               </div>
             </Col>
             <Col xs={24} sm={12} md={12} lg={12} xl={9}>
@@ -369,9 +371,9 @@ const NewProduct: React.FC = () => {
                       rows={4}
                     />
                   </Form.Item>
-                  <Form.Item label={<p>Rate</p>}>
+                  {/* <Form.Item label={<p>Condition</p>}>
                     <Rate />
-                  </Form.Item>
+                  </Form.Item> */}
                   <div style={{ maxWidth: 600, float: 'right', marginRight: 'auto' }}>
                     <Button onClick={submit}>Submit</Button>
                   </div>

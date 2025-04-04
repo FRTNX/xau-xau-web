@@ -2,18 +2,14 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'
 import { Carousel, Col, Row } from 'antd';
 
-import ClockCircleOutlined from '@ant-design/icons/ClockCircleOutlined';
-import { Input, Space, Form } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import { Button, Select } from 'antd';
-import { AudioOutlined } from '@ant-design/icons';
+import { Input, Form } from 'antd';
 import type { GetProps } from 'antd';
 
 import { EditFilled } from '@ant-design/icons';
 import { MdLocationPin } from 'react-icons/md';
 
 import { formatPrice } from './utils';
-import { fetchProduct } from './api/product.api';
+import { fetchProduct, productEmail } from './api/product.api';
 
 import { MdWhatsapp, MdMail } from 'react-icons/md';
 
@@ -21,8 +17,6 @@ import map from './assets/images/map.png';
 import config from './config/config';
 
 import "./components/fancy-buttons/hover.glow.css";
-
-type SearchProps = GetProps<typeof Input.Search>;
 
 const { TextArea } = Input;
 
@@ -32,6 +26,7 @@ const Product = () => {
   const { id } = useParams();
   const mobile = window.innerWidth < 500;
 
+  const [msgBoxOpen, setMsgBoxOpen] = useState(false);
   const [data, setData] = useState({
     _id: '',
     owner: '',
@@ -50,11 +45,6 @@ const Product = () => {
     countryCode: ''
   });
 
-  const [emailDetails, setEmailDetails] = useState({
-    name: '',
-    contact: '',
-    message: ''
-  })
 
   useEffect(() => {
     loadProduct();
@@ -67,10 +57,44 @@ const Product = () => {
   }
 
   const toggleMsgBox = () => {
-
+    if (msgBoxOpen) {
+      setMsgBoxOpen(false);
+    } else {
+      setMsgBoxOpen(true);
+    }
   }
 
   const MessageBox = () => {
+    const [msgData, setMsgData] = useState({
+      name: '',
+      contact: '',
+      message: ''
+    });
+
+    const handleChange = (name, event) => {
+      console.log(msgData)
+      setMsgData({ ...msgData, [name]: event.target.value });
+    }
+
+    const submit = async () => {
+      const params = {
+        product: {
+          id: data._id
+        },
+        customer: {
+          name: msgData.name,
+          contact: msgData.contact,
+          message: msgData.message
+        }
+      };
+
+      console.log('sending params:', params)
+
+      const result = await productEmail(params);
+      console.log('email send result:', result)
+    }
+
+
     return (
       <>
         <Form
@@ -80,15 +104,25 @@ const Product = () => {
           style={{ maxWidth: 600 }}
         >
           <Form.Item label="Name">
-            <Input placeholder='Your Name' />
+            <Input
+              value={msgData.name}
+              placeholder='Your Name'
+              onChange={(e) => handleChange('name', e)}
+            />
           </Form.Item>
           <Form.Item label="Contact Detail">
-            <Input placeholder='Phone Number or Email Address' />
+            <Input placeholder='Phone Number or Email Address' onChange={(e) => handleChange('contact', e)} />
           </Form.Item>
           <Form.Item label="Message">
-            <TextArea placeholder="Message" autoSize style={{ minHeight: 100 }} />
+            <TextArea placeholder="Message" autoSize style={{ minHeight: 100 }} onChange={(e) => handleChange('message', e)} />
           </Form.Item>
+          <div style={{ float: 'right' }}>
+            <button style={{ background: 'black' }} onClick={submit}>
+              Send
+            </button>
+          </div>
         </Form>
+
       </>
     )
   }
@@ -176,10 +210,13 @@ const Product = () => {
                         Email Seller
                       </button>
                     </div>
-                    <br />
-                    <br />
-                    <br />
-                    <MessageBox />
+                    {
+                      msgBoxOpen && (
+                        <div style={{ paddingTop: mobile ? 40 : 70 }}>
+                          <MessageBox />
+                        </div>
+                      )
+                    }
                   </div>
                 </div>
               )
@@ -187,11 +224,11 @@ const Product = () => {
           </Col>
           <Col xs={24} sm={12} md={12} lg={12} xl={9}>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ textAlign: 'left', paddingLeft: '7%', paddingBottom: 5 }}>
+              <div style={{ textAlign: 'left', paddingLeft: mobile ? 0 : '7%', paddingBottom: 5 }}>
                 <MdLocationPin style={{ fontSize: 18, marginBottom: -4, color: 'green' }} />
                 Product Location
               </div>
-              <img src={map} style={{ height: 400, width: 400, objectFit: 'cover', borderRadius: 5 }} />
+              <img src={map} style={{ height: mobile ? 320 : 400, width: mobile ? '100%' : 400, objectFit: 'cover', borderRadius: 5 }} />
               <br />
               <AdSection height={300} width={300} />
             </div>
