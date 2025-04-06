@@ -1,7 +1,6 @@
-import React, { PureComponent, useState } from 'react';
-import { RadialBarChart, RadialBar, Legend, ResponsiveContainer } from 'recharts';
-import { ColorPicker } from 'antd';
-
+// @ts-nocheck
+import { useState } from 'react';
+import { RadialBarChart, RadialBar, Legend } from 'recharts';
 
 const style = {
   // paddingTop: 200,

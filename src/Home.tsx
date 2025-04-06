@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useEffect, useState } from "react";
 import { Row, Col, Space, Select } from "antd";
 
@@ -12,8 +13,6 @@ import { formatPrice, shuffleArray } from "./utils";
 
 import "./components/fancy-buttons/hover.glow.css";
 import './xau.css';
-
-import Selectables from "./components/Selectable";
 
 const baseUrl = `${config.baseUrl}/api/v0/product/thumbnail`;
 

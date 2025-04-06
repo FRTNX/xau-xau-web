@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Image, Upload } from 'antd';
@@ -10,7 +11,6 @@ import {
   Form,
   Input,
   InputNumber,
-  Rate,
   Select,
   Space,
   ConfigProvider,

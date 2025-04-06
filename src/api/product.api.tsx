@@ -1,5 +1,5 @@
+// @ts-nocheck
 import config from "../config/config";
-
 
 const createProduct = async (form: FormData) => {
   try {

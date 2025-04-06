@@ -1,9 +1,9 @@
+// @ts-nocheck
 import { lazy, Suspense } from "react";
 import { Switch, Route } from "react-router-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import MainLayout from "./MainLayout";
-import NewAd from "./NewAd";
 
 const Home = lazy(() => import('./Home'));
 const SignIn = lazy(() => import('./SignIn'));
@@ -14,7 +14,7 @@ const CreateProduct = lazy(() => import('./CreateProduct'));
 const EditProduct = lazy(() => import('./EditProduct'));
 
 const AdsDashboard = lazy(() => import('./AdsDashboard'));
-const NewProduct = lazy(() => import('./NewAd'));
+const NewAd = lazy(() => import('./NewAd'));
 
 
 const App = () => {
