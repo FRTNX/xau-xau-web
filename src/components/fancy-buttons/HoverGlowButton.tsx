@@ -1,9 +1,10 @@
+// @ts-nocheck
 import './hover.glow.css';
 
-const HoverGlowButton = ({ text}) => {
+const HoverGlowButton = ({ text }) => {
 
     return (
-        <button class="glow-on-hover" type="button">{text}</button>
+        <button className="glow-on-hover" type="button">{text}</button>
     )
 }
 

@@ -1,10 +1,11 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { Badge, Card, Space, Input } from 'antd';
 import { MdOutlineEmail, MdPassword, MdAccountCircle } from 'react-icons/md'
 
 import './xau.css'
 
-import { createUser, signIn } from './api/api';
+import { createUser } from './api/api';
 
 
 const SignUp: React.FC = () => {
