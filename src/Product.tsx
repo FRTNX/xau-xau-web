@@ -13,6 +13,8 @@ import { fetchProduct, productEmail } from './api/product.api';
 
 import { MdWhatsapp, MdMail } from 'react-icons/md';
 
+import { MdAlternateEmail } from 'react-icons/md';
+
 import map from './assets/images/map.png';
 import config from './config/config';
 
@@ -117,7 +119,7 @@ const Product = () => {
             <TextArea placeholder="Message" autoSize style={{ minHeight: 100 }} onChange={(e) => handleChange('message', e)} />
           </Form.Item>
           <div style={{ float: 'right' }}>
-            <button style={{ background: 'black' }} onClick={submit}>
+            <button style={{ background: 'rgb(32, 75, 32)' }} onClick={submit}>
               Send
             </button>
           </div>
@@ -204,10 +206,10 @@ const Product = () => {
                       <button
                         // className="glow-on-hover"
                         onClick={toggleMsgBox}
-                        style={{ background: 'rgb(176, 175, 67)', padding: 7, fontSize: 13, fontFamily: 'monospace', color: 'rgb(0, 0, 0)' }}
+                        style={{ background: msgBoxOpen ? 'black' : 'rgb(176, 175, 67)', padding: 7, fontSize: 13, color: msgBoxOpen ? 'grey' : 'rgb(0, 0, 0)', fontWeight: 600 }}
                       >
                         <MdMail style={{ marginBottom: -7, fontSize: 22, paddingRight: 1 }} />
-                        Email Seller
+                        {"Send Email"}
                       </button>
                     </div>
                     {
