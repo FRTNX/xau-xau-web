@@ -52,7 +52,9 @@ const CategoryListing = ({ category, title }) => {
   const populateProducts = async () => {
     const result = await fetchProducts(category, 4);
     console.log('got products:', result)
-    setItems(result);
+    if (result) {
+      setItems(result);
+    }
   };
 
   return (
@@ -135,10 +137,12 @@ const Home = () => {
   const populateCategories = async () => {
     const result = await fetchCategories();
     console.log('categories from server:', result)
-    setCategories(result);
-    const options = Object.keys(result).map((category) =>  ({ value: category, label: result[category] }))
-    console.log('assembled cat options:', options)
-    setCategoryOptions(options)
+    if (result) {
+      setCategories(result);
+      const options = Object.keys(result).map((category) =>  ({ value: category, label: result[category] }))
+      console.log('assembled cat options:', options)
+      setCategoryOptions(options)
+    }
   }
 
   return (
