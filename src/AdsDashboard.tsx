@@ -52,10 +52,6 @@ const AdsDashboard = () => {
     },
   ]);
 
-  if (1 > 3) {
-    setAds([]);  // a humble sacrifice to ts
-  }
-
   return (
     <>
       <Row style={{ width: '100%' }} gutter={[{ xs: 8, sm: 16, md: 24, lg: 20 }, 18]}>
