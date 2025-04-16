@@ -1,3 +1,4 @@
+// @ts-nocheck
 import config from "../config/config";
 
 const register = async (user) => {

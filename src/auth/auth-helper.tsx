@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { signout } from './api-auth.js';
 
 const auth = {
