@@ -59,6 +59,13 @@ input:focus-visible {
   outline: none;
 }
 
+@media screen and (max-width: 500px) {
+  .xau {
+    padding: 0px;
+    margin: 2px;
+  }
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
