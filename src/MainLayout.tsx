@@ -10,6 +10,8 @@ import { MdWorkspaces, MdBarChart, MdUpcoming } from 'react-icons/md';
 import { DollarCircleOutlined } from '@ant-design/icons';
 import { PieChartOutlined } from '@ant-design/icons';
 
+import { Analytics } from "@vercel/analytics/react"
+
 import brand from './assets/images/logo-square.png';
 import parent from './assets/images/zugzwang.png';
 import './xau.css';
@@ -180,6 +182,7 @@ const MainLayout: React.FC = ({ children }) => {
 
   return (
     <Layout style={{ borderRadius: 15, background: 'black' }}>
+      <Analytics />
       <ConfigProvider
         theme={{ algorithm: [theme.darkAlgorithm], token: { colorBgContainer: '#292929', colorPrimary: '#fff', colorBgSolid: '#000' } }}
       >
@@ -250,7 +253,7 @@ const MainLayout: React.FC = ({ children }) => {
               <div
                 className='dark-secondary'
                 style={{
-                  padding: 24,
+                  padding: mobile ? 18 : 24,
                   minHeight: 360,
                   borderRadius: 10,
                 }}

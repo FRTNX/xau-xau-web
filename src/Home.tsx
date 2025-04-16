@@ -16,7 +16,6 @@ import './xau.css';
 
 const baseUrl = `${config.baseUrl}/api/v0/product/thumbnail`;
 
-
 const formatString = (s: string, maxLength: number) => s.length > maxLength ? s.slice(0, maxLength) + '...' : s;
 
 const AdSection = () => {
@@ -69,7 +68,7 @@ const CategoryListing = ({ category, title }) => {
                         src={baseUrl + `?id=${item._id}`}
                         width={'100%'}
                         height={238}
-                        style={{ objectFit: 'cover' }}
+                        style={{ objectFit: 'cover', borderTopLeftRadius: 5, borderTopRightRadius: 5 }}
                         loading="lazy"
                       />
                       <div style={{ lineHeight: 0, padding: 5, marginTop: -10 }}>
