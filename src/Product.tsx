@@ -21,6 +21,11 @@ import config from './config/config';
 
 import "./components/fancy-buttons/hover.glow.css";
 
+import dayjs from "dayjs";
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
+
 const { TextArea } = Input;
 
 const baseUrl = `${config.baseUrl}/api/v0/product/image`;
@@ -45,7 +50,8 @@ const Product = () => {
     created: '',
     email: '',
     phoneNumber: '',
-    countryCode: ''
+    countryCode: '',
+    created: ''
   });
 
 
@@ -182,7 +188,7 @@ const Product = () => {
                   }
                 </p>
               </div>
-              <p style={{ lineHeight: 0, fontSize: mobile ? 12 : 15, marginTop: -10, color: 'grey' }}>{'5 days ago'}</p>
+              <p style={{ lineHeight: 0, fontSize: mobile ? 12 : 15, marginTop: -10, color: 'grey' }}>{dayjs(data.created).fromNow()}</p>
               <p style={{ fontSize: mobile ? 15 : 16, color: 'grey', marginTop: 27 }}><MdLocationPin style={{ marginBottom: -2, color: 'green' }} />{data.location}</p>
               <p style={{ fontSize: mobile ? 15 : 16 }}>{data.description}</p>
             </div>
