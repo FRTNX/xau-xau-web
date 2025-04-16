@@ -172,7 +172,7 @@ const NewProduct: React.FC = () => {
           formData.append(`images`, file.originFileObj);
         }
       })
-      userId && formData.append('userId', jwt.user._id);
+      jwt.user._id && formData.append('userId', jwt.user._id);
       data.name && formData.append('name', data.name);
       data.description && formData.append('description', data.description);
       category && formData.append('category', category);

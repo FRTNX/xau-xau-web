@@ -279,7 +279,7 @@ const MainLayout: React.FC = ({ children }) => {
                 style={{ margin: '16px 0', marginLeft: -5, paddingLeft: 0, color: 'white' }}
               />
             </div>
-            <p>{jwt?.user?._id}</p>
+            {/* <p>{jwt?.user?._id}</p> */}
           </Header>
           <Layout className='dark-primary' style={{ borderRadius: 0 }}>
             <Content style={{ margin: '24px 16px 0', minHeight: '100vh', filter: mobile && !sidebarCollapsed ? 'blur(6px)' : 'none' }}>
