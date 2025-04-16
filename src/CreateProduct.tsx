@@ -22,6 +22,7 @@ import { MdImage, MdLocationPin } from 'react-icons/md';
 import { createProduct } from './api/product.api';
 
 import { formatPrice } from './utils';
+import config from './config/config';
 
 const { TextArea } = Input;
 
@@ -243,7 +244,7 @@ const NewProduct: React.FC = () => {
                 >
                   <Form.Item label={<p>Upload</p>} valuePropName="fileList" getValueFromEvent={normFile}>
                     <Upload
-                      action="http://localhost:5555/api/v0/mock/img/upload"
+                      action={`${config.baseUrl}/api/v0/mock/img/upload`}
                       listType="picture-card"
                       fileList={fileList}
                       onPreview={handlePreview}

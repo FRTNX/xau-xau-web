@@ -33,17 +33,7 @@ const AdSection = () => {
 
 const CategoryListing = ({ category, title }) => {
   const mobile = window.innerWidth < 500;
-  const [items, setItems] = useState([
-    {
-      _id: '67e27f0146e9aad23bfda25c',
-      name: 'Item Title',
-      price: 7,
-      currency: 'USD$',
-      views: 0,
-      location: 'Bulawayo',
-      created: '2025-03-25T10:01:37.555Z',
-    }
-  ]);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     populateProducts();

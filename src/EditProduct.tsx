@@ -93,13 +93,13 @@ const EditProduct: React.FC = () => {
     setCurrency(result.currency);
     handleChangeContactMethod(result.contactMethod);
     if (result.countryCode) {
-        setCountryCode(result.countryCode)
+      setCountryCode(result.countryCode)
     }
     if (result.phoneNumber) {
-        setPhoneNumber(result.phoneNumber)
+      setPhoneNumber(result.phoneNumber)
     }
     if (result.email) {
-        setEmail(result.email)
+      setEmail(result.email)
     }
   }
 
@@ -226,17 +226,17 @@ const EditProduct: React.FC = () => {
           <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 20 }, 18]}>
             <Col xs={24} sm={12} md={12} lg={12} xl={15}>
               <Carousel arrows infinite={false} autoplay={{ dotDuration: true }} autoplaySpeed={5000}>
-              {
-                data.images.map((file, index) => (
-                  <div key={index}>
-                    <img
-                      src={baseUrl + `?id=${id}&&index=${index}`}
-                      width={'100%'}
-                      height={mobile ? 400 : 600}
-                      style={{ objectFit: 'cover', borderRadius: 10 }} />
-                  </div>
-                ))
-              }
+                {
+                  data.images.map((file, index) => (
+                    <div key={index}>
+                      <img
+                        src={baseUrl + `?id=${id}&&index=${index}`}
+                        width={'100%'}
+                        height={mobile ? 400 : 600}
+                        style={{ objectFit: 'cover', borderRadius: 10 }} />
+                    </div>
+                  ))
+                }
 
               </Carousel>
               {
@@ -247,17 +247,17 @@ const EditProduct: React.FC = () => {
                   </div>
                 )
               }
-           <div>
-              <div style={{  marginTop: -10 }}>
-                <p style={{ display: 'inline-block', fontSize: mobile ? 18 : 25 }}>{data.name}</p>
-                <p style={{ display: 'inline-block', float: 'right', fontSize: mobile ? 18 : 25 }}>
-                  {currency}{" "}{formatPrice(price)}
-                </p>
+              <div>
+                <div style={{ marginTop: -10 }}>
+                  <p style={{ display: 'inline-block', fontSize: mobile ? 18 : 25 }}>{data.name}</p>
+                  <p style={{ display: 'inline-block', float: 'right', fontSize: mobile ? 18 : 25 }}>
+                    {currency}{" "}{formatPrice(price)}
+                  </p>
+                </div>
+                <p style={{ lineHeight: 0, fontSize: mobile ? 12 : 15, marginTop: -10, color: 'grey' }}>{'5 days ago'}</p>
+                <p style={{ fontSize: mobile ? 15 : 16, color: 'grey', marginTop: 27 }}><MdLocationPin style={{ marginBottom: -2, color: 'green' }} />{data.location}</p>
+                <p style={{ fontSize: mobile ? 15 : 16 }}>{data.description}</p>
               </div>
-              <p style={{ lineHeight: 0, fontSize: mobile ? 12 : 15, marginTop: -10, color: 'grey' }}>{'5 days ago'}</p>
-              <p style={{ fontSize: mobile ? 15 : 16, color: 'grey', marginTop: 27 }}><MdLocationPin style={{ marginBottom: -2, color: 'green'}} />{data.location}</p>
-              <p style={{ fontSize: mobile ? 15 : 16 }}>{data.description}</p>
-            </div>
             </Col>
             <Col xs={24} sm={12} md={12} lg={12} xl={9}>
               <>
@@ -271,7 +271,7 @@ const EditProduct: React.FC = () => {
                 >
                   <Form.Item label={<p>Upload</p>} valuePropName="fileList" getValueFromEvent={normFile}>
                     <Upload
-                      action="http://localhost:5555/api/v0/mock/img/upload"
+                      action={`${config.baseUrl}/api/v0/mock/img/upload`}
                       listType="picture-card"
                       fileList={fileList}
                       onPreview={handlePreview}
