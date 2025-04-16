@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Badge, Card, Space, Input } from 'antd';
+import { Badge, Card, Space, Input, message } from 'antd';
 import { MdOutlineEmail, MdPassword } from 'react-icons/md'
-import { signIn } from './api/api';
+
+import { signin } from './auth/api-auth';
+import auth from './auth/auth-helper'
 
 import './xau.css'
 
@@ -23,10 +25,11 @@ const SignIn: React.FC = () => {
       password: data.password
     }
 
-    const result = await signIn(params);
+    const result = await signin(params);
     console.log(result)
-    if (result._id) {
-      localStorage.setItem('user', JSON.stringify(result));
+    if (result && result.token) {
+      auth.authenticate(result)
+      message.success('Sign up successful!');
       window.location.href = '/'
     }
 

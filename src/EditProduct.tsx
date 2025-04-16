@@ -24,7 +24,10 @@ import { MdImage, MdLocationPin } from 'react-icons/md';
 import { formatPrice } from './utils';
 import { createProduct, fetchProduct } from './api/product.api';
 
+import auth from './auth/auth-helper';
 import config from './config/config';
+
+
 const baseUrl = `${config.baseUrl}/api/v0/product/image`;
 
 const { TextArea } = Input;
@@ -48,6 +51,8 @@ const getBase64 = (file: FileType): Promise<string> =>
 
 const EditProduct: React.FC = () => {
   const { id } = useParams();
+  const jwt = auth.isAuthenticated();
+
   const mobile = window.innerWidth < 500;
 
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -178,17 +183,15 @@ const EditProduct: React.FC = () => {
   };
 
   const submit = async () => {
-    const user = localStorage.getItem('user')
-    if (user) {
+    if (jwt) {
       const formData = new FormData();
-      const userId = JSON.parse(user)._id;
-      console.log('got local user id:', userId)
+      console.log('got local user id:', jwt.user._id)
       fileList.map((file) => {
         if (file.originFileObj) {
           formData.append(`images`, file.originFileObj);
         }
       })
-      userId && formData.append('userId', userId);
+      userId && formData.append('userId', jwt.user._id);
       data.name && formData.append('name', data.name);
       data.description && formData.append('description', data.description);
       category && formData.append('category', category);

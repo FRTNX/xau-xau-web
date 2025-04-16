@@ -6,7 +6,7 @@ import { Breadcrumb, Layout, Menu, theme, ConfigProvider } from 'antd';
 import { TypeAnimation } from 'react-type-animation';
 
 import { MenuOutlined } from '@ant-design/icons';
-import { MdWorkspaces, MdBarChart, MdUpcoming } from 'react-icons/md';
+import { MdWorkspaces, MdBarChart, MdUpcoming, MdShield } from 'react-icons/md';
 import { DollarCircleOutlined } from '@ant-design/icons';
 import { PieChartOutlined } from '@ant-design/icons';
 
@@ -14,6 +14,9 @@ import { Analytics } from "@vercel/analytics/react"
 
 import brand from './assets/images/logo-square.png';
 import parent from './assets/images/zugzwang.png';
+
+import auth from './auth/auth-helper';
+
 import './xau.css';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -32,6 +35,19 @@ const items1: MenuProps['items'] = [
   icon: key[0],
   label: `${key[1]}`,
 }));
+
+// const unsignedItems: MenuProps['items'] = [
+//   [<MdShield />, 'Sign In'],
+//   [<PieChartOutlined />, 'Ads Dashboard'],
+//   [<DollarCircleOutlined />, 'Sell Something'],
+//   [<MdBarChart />, 'Your Products'],
+//   [<MdUpcoming />, 'Auctions']
+// ].map((key) => ({
+//   key: key[1],
+//   icon: key[0],
+//   label: `${key[1]}`,
+// }));
+
 
 const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
   (icon, index) => {
@@ -64,6 +80,8 @@ const CRUMB_MAPPER = {
 }
 
 const MainLayout: React.FC = ({ children }) => {
+  const jwt = auth.isAuthenticated();
+
   const mobile = window.innerWidth < 500;
   const [sidebarCollapsed, setSidebarCollapsed] = useState(mobile ? true : false);
   const [desktopSidebarCollapsed, setDesktopSidebarCollapsed] = useState(false);
@@ -105,9 +123,9 @@ const MainLayout: React.FC = ({ children }) => {
     const pathname = window.location.pathname;
     console.log('pathname:', pathname)
     let newCrumbs = [{ title: '' }];
-    
+
     if (equalArrays(pathVariables, ['', ''])) {
-      newCrumbs.push({ title: ''}, { title: ''});
+      newCrumbs.push({ title: '' }, { title: '' });
     }
 
     pathVariables.map((item) => {
@@ -151,10 +169,25 @@ const MainLayout: React.FC = ({ children }) => {
       window.location.href = '/'
     }
     if (event.key === 'Ads Dashboard') {
-      window.location.href = '/advertisers/dashboard'
+      if (jwt) {
+        window.location.href = '/advertisers/dashboard'
+      } else {
+        window.location.href = '/signin'
+      }
     }
     if (event.key === 'Sell Something') {
-      window.location.href = '/new/product'
+      if (jwt) {
+        window.location.href = '/new/product'
+      } else {
+        window.location.href = '/signin'
+      }
+    }
+    if (event.key === 'Your Products') {
+      if (jwt) {
+        window.location.href = '/'
+      } else {
+        window.location.href = '/signin'
+      }
     }
   }
 
@@ -246,7 +279,7 @@ const MainLayout: React.FC = ({ children }) => {
                 style={{ margin: '16px 0', marginLeft: -5, paddingLeft: 0, color: 'white' }}
               />
             </div>
-            {/* <p>{JSON.parse(localStorage.getItem('user')).username}</p> */}
+            <p>{jwt?.user?._id}</p>
           </Header>
           <Layout className='dark-primary' style={{ borderRadius: 0 }}>
             <Content style={{ margin: '24px 16px 0', minHeight: '100vh', filter: mobile && !sidebarCollapsed ? 'blur(6px)' : 'none' }}>

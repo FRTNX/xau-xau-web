@@ -19,12 +19,15 @@ import {
 
 import { MdImage, MdLocationPin } from 'react-icons/md';
 
+import imageCompression from 'browser-image-compression';
 import { createProduct } from './api/product.api';
 
 import { formatPrice } from './utils';
 import config from './config/config';
 
 const { TextArea } = Input;
+
+import auth from './auth/auth-helper';
 
 const normFile = (e: any) => {
   if (Array.isArray(e)) {
@@ -44,6 +47,7 @@ const getBase64 = (file: FileType): Promise<string> =>
   });
 
 const NewProduct: React.FC = () => {
+  const jwt = auth.isAuthenticated();
   const mobile = window.innerWidth < 500;
 
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -85,9 +89,18 @@ const NewProduct: React.FC = () => {
     setPreviewOpen(true);
   };
 
+  const compressImages = async (files) => {
+    files.map((file) => {
+      console.log('compressing file:', file)
+      console.log('originalFile instanceof Blob', file instanceof Blob); // true
+      console.log(`originalFile size ${file.size / 1024 / 1024} MB`);
+    })
+  }
+
   const handleImageChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
     console.log(newFileList)
+    compressImages(newFileList)
     updatePreviewList(newFileList);
   }
 
@@ -151,17 +164,15 @@ const NewProduct: React.FC = () => {
   };
 
   const submit = async () => {
-    const user = localStorage.getItem('user')
-    if (user) {
+    if (jwt) {
       const formData = new FormData();
-      const userId = JSON.parse(user)._id;
-      console.log('got local user id:', userId)
+      console.log('got local user id:', jwt.user._id)
       fileList.map((file) => {
         if (file.originFileObj) {
           formData.append(`images`, file.originFileObj);
         }
       })
-      userId && formData.append('userId', userId);
+      userId && formData.append('userId', jwt.user._id);
       data.name && formData.append('name', data.name);
       data.description && formData.append('description', data.description);
       category && formData.append('category', category);
@@ -173,7 +184,6 @@ const NewProduct: React.FC = () => {
       phoneNumber && formData.append('phoneNumber', String(phoneNumber));
       countryCode && formData.append('countryCode', countryCode);
       email && formData.append('email', email);
-
       const result = await createProduct(formData);
       console.log('result:', result)
 
