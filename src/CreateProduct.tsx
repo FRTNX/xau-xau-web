@@ -46,6 +46,7 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
+
 const NewProduct: React.FC = () => {
   const jwt = auth.isAuthenticated();
   const mobile = window.innerWidth < 500;
@@ -70,6 +71,13 @@ const NewProduct: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState<number>();
   const [email, setEmail] = useState('');
 
+  const [imageBlobs, setImageBlobs] = useState([]);
+
+  const [base64String, setBase64String] = useState('');
+  const [blobData, setBlobData] = useState(null);
+
+  const [compressedImages, setCompressedImages] = useState([]);
+
   const [data, setData] = useState({
     name: 'Item Title',
     description: 'Item Description.',
@@ -89,18 +97,59 @@ const NewProduct: React.FC = () => {
     setPreviewOpen(true);
   };
 
-  const compressImages = async (files) => {
-    files.map((file) => {
-      console.log('compressing file:', file)
-      console.log('originalFile instanceof Blob', file instanceof Blob); // true
-      console.log(`originalFile size ${file.size / 1024 / 1024} MB`);
-    })
-  }
+  // const compressImage = (file) => {
+  //   console.log('compressing:', file)
+  //   const reader = new FileReader();
+
+  //   reader.onloadend = async () => {
+  //     const arrayBuffer = reader.result;
+  //     const blob = new Blob([arrayBuffer], { type: file.type })
+  //     console.log('is it a fucking blob:', blob instanceof Blob)
+  //     console.log(`originalFile size ${blob.size / 1024 / 1024} MB`);
+
+  //     const options = {
+  //       maxSizeMB: 1,
+  //       // maxWidthOrHeight: 1920,
+  //       useWebWorker: true,
+  //     }
+  //     try {
+  //       const compressedFile = await imageCompression(file, options);
+  //       console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
+  //       console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+
+  //       // await uploadToServer(compressedFile); // write your own logic
+  //       setCompressedImages([...compressedImages, compressedFile])
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+
+  //   reader.readAsArrayBuffer(file);
+  // };
+
+  const beforeUpload = async (file) => {
+    // Compress the image using browserImageCompression
+    return new Promise( async (resolve, reject) => {
+      try {
+        // Define options for compression
+        const options = {
+          maxSizeMB: 1,     // Set maximum size of compressed file in MB
+          // maxWidthOrHeight: 800, // Set maximum width or height for compression
+          useWebWorker: true  // Use Web Worker for better performance on large files
+        };
+
+        const compressedFile = await imageCompression(file.originFileObj, options);
+
+        resolve(compressedFile);
+      } catch (error) {
+        reject(new Error('Error compressing image'));
+      }
+    });
+  };
 
   const handleImageChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
     console.log(newFileList)
-    compressImages(newFileList)
     updatePreviewList(newFileList);
   }
 
@@ -164,6 +213,8 @@ const NewProduct: React.FC = () => {
   };
 
   const submit = async () => {
+    // consol
+    imageBlobs.map((image) => console.log('image blob:', image instanceof Blob))
     if (jwt) {
       const formData = new FormData();
       console.log('got local user id:', jwt.user._id)
@@ -186,7 +237,6 @@ const NewProduct: React.FC = () => {
       email && formData.append('email', email);
       const result = await createProduct(formData);
       console.log('result:', result)
-
       if (result.productId) {
         window.location.href = `/product/${result.productId}`
       }
@@ -258,6 +308,7 @@ const NewProduct: React.FC = () => {
                       listType="picture-card"
                       fileList={fileList}
                       onPreview={handlePreview}
+                      beforeUpload={beforeUpload}
                       onChange={handleImageChange}
                     >
                       {fileList.length >= 8 ? null : uploadButton}
