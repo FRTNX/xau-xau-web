@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Image, Upload } from 'antd';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
@@ -17,7 +17,7 @@ import {
   theme
 } from 'antd';
 
-import { MdImage, MdLocationPin } from 'react-icons/md';
+import { MdImage, MdLocationPin, MdWindPower } from 'react-icons/md';
 
 import imageCompression from 'browser-image-compression';
 import { createProduct } from './api/product.api';
@@ -76,17 +76,37 @@ const NewProduct: React.FC = () => {
   const [base64String, setBase64String] = useState('');
   const [blobData, setBlobData] = useState(null);
 
+  const [loading, setLoading] = useState(false);
   const [compressedImages, setCompressedImages] = useState([]);
 
   const [data, setData] = useState({
     name: 'Item Title',
     description: 'Item Description.',
-    // price: 0,
-    // currency: 'USD$',
     location: 'Bulawayo',
     category: 'Computers',
     created: '5 days ago'
   })
+
+  const [fdata, setFdata] = useState();
+
+  useEffect(() => {
+    console.log('effecting', compressedImages.length, fileList.length)
+    if ((compressedImages.length === fileList.length) && fdata) {
+      setLoading(false)
+      compressedImages.map((file) => {
+        fdata.append(`images`, file);
+      });
+      submitProduct(fdata)
+    }
+  }, [compressedImages]);
+
+  const submitProduct = async (formData) => {
+    const result = await createProduct(formData);
+    console.log('result:', result)
+    if (result.productId) {
+      window.location.href = `/product/${result.productId}`
+    }
+  }
 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
@@ -97,57 +117,39 @@ const NewProduct: React.FC = () => {
     setPreviewOpen(true);
   };
 
-  // const compressImage = (file) => {
-  //   console.log('compressing:', file)
-  //   const reader = new FileReader();
+  const compressImages = async (files) => {
+    setLoading(true);
+    await files.map(async (imageFile) => {
+      const file = imageFile.originFileObj;
+      console.log('compressing:', file)
+      const reader = new FileReader();
 
-  //   reader.onloadend = async () => {
-  //     const arrayBuffer = reader.result;
-  //     const blob = new Blob([arrayBuffer], { type: file.type })
-  //     console.log('is it a fucking blob:', blob instanceof Blob)
-  //     console.log(`originalFile size ${blob.size / 1024 / 1024} MB`);
+      reader.onloadend = async () => {
+        const arrayBuffer = reader.result;
+        const blob = new Blob([arrayBuffer], { type: file.type })
+        console.log('is it a fucking blob:', blob instanceof Blob)
+        console.log(`originalFile size ${blob.size / 1024 / 1024} MB`);
 
-  //     const options = {
-  //       maxSizeMB: 1,
-  //       // maxWidthOrHeight: 1920,
-  //       useWebWorker: true,
-  //     }
-  //     try {
-  //       const compressedFile = await imageCompression(file, options);
-  //       console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
-  //       console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
-
-  //       // await uploadToServer(compressedFile); // write your own logic
-  //       setCompressedImages([...compressedImages, compressedFile])
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-
-  //   reader.readAsArrayBuffer(file);
-  // };
-
-  const beforeUpload = async (file) => {
-    // Compress the image using browserImageCompression
-    return new Promise( async (resolve, reject) => {
-      try {
-        // Define options for compression
         const options = {
-          maxSizeMB: 1,     // Set maximum size of compressed file in MB
-          // maxWidthOrHeight: 800, // Set maximum width or height for compression
-          useWebWorker: true  // Use Web Worker for better performance on large files
-        };
+          maxSizeMB: 1,
+          useWebWorker: true,
+        }
+        try {
+          const compressedFile = await imageCompression(file, options);
+          console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
+          console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
 
-        const compressedFile = await imageCompression(file.originFileObj, options);
+          setCompressedImages(current => [...current, compressedFile])
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
-        resolve(compressedFile);
-      } catch (error) {
-        reject(new Error('Error compressing image'));
-      }
-    });
+      await reader.readAsArrayBuffer(file);
+    })
   };
 
-  const handleImageChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+  const handleImageChange: UploadProps['onChange'] = async ({ fileList: newFileList }) => {
     setFileList(newFileList);
     console.log(newFileList)
     updatePreviewList(newFileList);
@@ -213,17 +215,11 @@ const NewProduct: React.FC = () => {
   };
 
   const submit = async () => {
-    // consol
-    imageBlobs.map((image) => console.log('image blob:', image instanceof Blob))
     if (jwt) {
+      const compressedFiles = await compressImages(fileList)
       const formData = new FormData();
-      console.log('got local user id:', jwt.user._id)
-      fileList.map((file) => {
-        if (file.originFileObj) {
-          formData.append(`images`, file.originFileObj);
-        }
-      })
-      jwt.user._id && formData.append('userId', jwt.user._id);
+      const userId = jwt.user._id;
+      userId && formData.append('userId', userId);
       data.name && formData.append('name', data.name);
       data.description && formData.append('description', data.description);
       category && formData.append('category', category);
@@ -235,11 +231,7 @@ const NewProduct: React.FC = () => {
       phoneNumber && formData.append('phoneNumber', String(phoneNumber));
       countryCode && formData.append('countryCode', countryCode);
       email && formData.append('email', email);
-      const result = await createProduct(formData);
-      console.log('result:', result)
-      if (result.productId) {
-        window.location.href = `/product/${result.productId}`
-      }
+      setFdata(formData);
     }
   }
 
@@ -308,7 +300,7 @@ const NewProduct: React.FC = () => {
                       listType="picture-card"
                       fileList={fileList}
                       onPreview={handlePreview}
-                      beforeUpload={beforeUpload}
+                      // beforeUpload={beforeUpload}
                       onChange={handleImageChange}
                     >
                       {fileList.length >= 8 ? null : uploadButton}
@@ -433,11 +425,10 @@ const NewProduct: React.FC = () => {
                       rows={4}
                     />
                   </Form.Item>
-                  {/* <Form.Item label={<p>Condition</p>}>
-                    <Rate />
-                  </Form.Item> */}
                   <div style={{ maxWidth: 600, float: 'right', marginRight: 'auto' }}>
-                    <Button onClick={submit}>Submit</Button>
+                    <Button disabled={loading} onClick={submit}>
+                      <MdWindPower color={loading ? 'grey' : 'green'} />
+                      Submit</Button>
                   </div>
                 </Form>
               </>
