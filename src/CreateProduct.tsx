@@ -20,7 +20,7 @@ import {
 import { MdImage, MdLocationPin, MdWindPower } from 'react-icons/md';
 
 import imageCompression from 'browser-image-compression';
-import { createProduct } from './api/product.api';
+import { createProduct, createThumbnail } from './api/product.api';
 
 import { formatPrice } from './utils';
 import config from './config/config';
@@ -45,7 +45,6 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onload = () => resolve(reader.result as string);
     reader.onerror = (error) => reject(error);
   });
-
 
 const NewProduct: React.FC = () => {
   const jwt = auth.isAuthenticated();
@@ -79,6 +78,8 @@ const NewProduct: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [compressedImages, setCompressedImages] = useState([]);
 
+  const [thumbnail, setThumbnail] = useState([]);
+
   const [data, setData] = useState({
     name: 'Item Title',
     description: 'Item Description.',
@@ -90,20 +91,26 @@ const NewProduct: React.FC = () => {
   const [fdata, setFdata] = useState();
 
   useEffect(() => {
-    console.log('effecting', compressedImages.length, fileList.length)
-    if ((compressedImages.length === fileList.length) && fdata) {
+    console.log('effecting', compressedImages.length, fileList.length, thumbnail.length)
+    if ((compressedImages.length === fileList.length) && fdata && thumbnail.length === 1) {
       setLoading(false)
       compressedImages.map((file) => {
         fdata.append(`images`, file);
       });
       submitProduct(fdata)
     }
-  }, [compressedImages]);
+  }, [compressedImages, thumbnail]);
 
   const submitProduct = async (formData) => {
     const result = await createProduct(formData);
     console.log('result:', result)
     if (result.productId) {
+      const thumbnailForm = new FormData();
+      thumbnailForm.append('thumbnail', thumbnail[0]);
+      const res = await createThumbnail(result.productId, thumbnailForm);
+      console.log('thumbnail creation result:', res)
+
+      //todo: validate thumbnail res before redirecting
       window.location.href = `/product/${result.productId}`
     }
   }
@@ -119,7 +126,7 @@ const NewProduct: React.FC = () => {
 
   const compressImages = async (files) => {
     setLoading(true);
-    await files.map(async (imageFile) => {
+    await files.map(async (imageFile, index) => {
       const file = imageFile.originFileObj;
       console.log('compressing:', file)
       const reader = new FileReader();
@@ -134,6 +141,7 @@ const NewProduct: React.FC = () => {
           maxSizeMB: 1,
           useWebWorker: true,
         }
+
         try {
           const compressedFile = await imageCompression(file, options);
           console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
@@ -142,6 +150,23 @@ const NewProduct: React.FC = () => {
           setCompressedImages(current => [...current, compressedFile])
         } catch (error) {
           console.log(error);
+        }
+
+        if (index === 0) {  // use first image as thumbnail
+          const thumbOptions = {
+            maxSizeMB: 0.1,
+            useWebWorker: true,
+          }
+
+          try {
+            const compressedThumbnail = await imageCompression(file, thumbOptions);
+            console.log('thumbnail instanceof Blob', compressedThumbnail instanceof Blob); // true
+            console.log(`thumbnail size ${compressedThumbnail.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+
+            setThumbnail(current => [compressedThumbnail])
+          } catch (error) {
+            console.log(error);
+          }
         }
       };
 
@@ -216,7 +241,7 @@ const NewProduct: React.FC = () => {
 
   const submit = async () => {
     if (jwt) {
-      const compressedFiles = await compressImages(fileList)
+      const compressedFiles = await compressImages(fileList);
       const formData = new FormData();
       const userId = jwt.user._id;
       userId && formData.append('userId', userId);

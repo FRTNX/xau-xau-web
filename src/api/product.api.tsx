@@ -18,6 +18,23 @@ const createProduct = async (form: FormData) => {
   }
 };
 
+const createThumbnail = async (productId, form) => {
+  try {
+    const response = await fetch(`${config.baseUrl}/api/v0/product/thumbnail?id=${productId}`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        // 'Content-Type': 'application/json'
+      },
+      body: form
+    });
+
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 const fetchProduct = async (productId: string) => {
   try {
     const response = await fetch(`${config.baseUrl}/api/v0/product?id=${productId}`, {
@@ -114,6 +131,7 @@ const fetchImages = async (productId: string) => {
 
 export {
   createProduct,
+  createThumbnail,
   fetchProduct,
   fetchProducts,
   fetchImages,
