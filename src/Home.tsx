@@ -80,15 +80,16 @@ const CategoryListing = ({ category, title }) => {
                             color: 'rgb(180, 182, 179)'
                           }}
                         >
-                          Nationwide Train Tours to beautiful local attractions</p>
+                        {formatString(item.name, 64)}  
+                        </p>
                         <p
                           style={{
                             marginTop: -5,
                             fontSize: mobile ? 14 : 15,
-                            paddingLeft: 2,
                             // background: 'rgb(103, 188, 60)',
                             background: 'linear-gradient(to left, rgb(112, 114, 115), black 50%)',
-                            padding: 5
+                            padding: 5,
+                            paddingLeft: 2,
                           }}
                         >
                           {item.currency}{" "}{formatPrice(item.price)}
