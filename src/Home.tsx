@@ -65,7 +65,7 @@ const CategoryListing = ({ category, title }) => {
                   <Col xs={24} sm={12} md={12} lg={12} xl={6}>
                     <div style={{ background: 'linear-gradient(rgb(112, 114, 115), black 50%)', height: '100%', padding: 0, borderRadius: 5, }} key={index}>
                       <img
-                        src={baseUrl + `?id=${item._id}`}
+                        src={item.thumbnail}
                         width={'100%'}
                         height={238}
                         style={{ objectFit: 'cover', borderTopLeftRadius: 5, borderTopRightRadius: 5 }}

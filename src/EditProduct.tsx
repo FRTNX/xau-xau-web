@@ -230,10 +230,10 @@ const EditProduct: React.FC = () => {
             <Col xs={24} sm={12} md={12} lg={12} xl={15}>
               <Carousel arrows infinite={false} autoplay={{ dotDuration: true }} autoplaySpeed={5000}>
                 {
-                  data.images.map((file, index) => (
+                  data.images.map((imageUrl, index) => (
                     <div key={index}>
                       <img
-                        src={baseUrl + `?id=${id}&&index=${index}`}
+                        src={imageUrl}
                         width={'100%'}
                         height={mobile ? 400 : 600}
                         style={{ objectFit: 'cover', borderRadius: 10 }} />
