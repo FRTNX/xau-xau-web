@@ -190,7 +190,7 @@ const Product = () => {
               </div>
               <p style={{ lineHeight: 0, fontSize: mobile ? 12 : 15, marginTop: -10, color: 'grey' }}>{dayjs(data.created).fromNow()}</p>
               <p style={{ fontSize: mobile ? 15 : 16, color: 'grey', marginTop: 27 }}><MdLocationPin style={{ marginBottom: -2, color: 'green' }} />{data.location}</p>
-              <p style={{ fontSize: mobile ? 15 : 16 }}>{data.description}</p>
+              <p style={{ whiteSpace: 'pre-line', fontSize: mobile ? 15 : 16 }}>{data.description}</p>
             </div>
             {
               data.contactMethod === 'WA' && data.phoneNumber && (

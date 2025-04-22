@@ -71,35 +71,45 @@ const CategoryListing = ({ category, title }) => {
                         style={{ objectFit: 'cover', borderTopLeftRadius: 5, borderTopRightRadius: 5 }}
                         loading="lazy"
                       />
-                      <div style={{ lineHeight: 0, padding: 5, marginTop: -10 }}>
-                        <div>
-                          <p
-                            style={{
-                              display: 'inline-block',
-                              maxWidth: 250,
-                              fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
-                            }}
-                          >
-                            {formatString(item.name, 32)}
-                          </p>
-                          <p style={{ display: 'inline-block', float: 'right' }}>{item.currency}{" "}{formatPrice(item.price)}</p>
-                        </div>
-                        <div>
-                          <p style={{ display: 'inline-block', color: 'grey' }}><MdLocationPin style={{ marginTop: -10, marginBottom: -2, color: 'green' }} />{item.location}</p>
-                          <div style={{ display: 'inline-block', float: 'right', marginTop: 4 }}>
-                            <EyeOutlined style={{ verticalAlign: 'middle', marginTop: -1 }} /> {Number(item.views)}
+                      <div style={{ lineHeight: 1, padding: 5, marginTop: -20 }}>
+                        <p
+                          style={{
+                            fontSize: mobile ? 16 : 17,
+                            // fontFamily: 'monospace',
+                            fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
+                            color: 'rgb(180, 182, 179)'
+                          }}
+                        >
+                          Nationwide Train Tours to beautiful local attractions</p>
+                        <p
+                          style={{
+                            marginTop: -5,
+                            fontSize: mobile ? 14 : 15,
+                            paddingLeft: 2,
+                            // background: 'rgb(103, 188, 60)',
+                            background: 'linear-gradient(to left, rgb(112, 114, 115), black 50%)',
+                            padding: 5
+                          }}
+                        >
+                          {item.currency}{" "}{formatPrice(item.price)}
+                        </p>
+                        <div style={{ display: 'inline-block', width: '70%', marginTop: -18 }}>
+                          <p style={{ color: 'grey' }}><MdLocationPin style={{ marginTop: -10, marginBottom: -2, color: 'green' }} />{item.location}</p>
+                          <div style={{ marginTop: 4, paddingLeft: mobile ? 2 : 1 }}>
+                            <EyeOutlined style={{ verticalAlign: 'middle', marginTop: -1, color: 'grey' }} /> {Number(item.views)}
                           </div>
                         </div>
+                        <div style={{ display: 'inline-block', right: mobile ? 8 : 13, position: 'absolute', bottom: 5 }}>
+                          <button
+                            className="glow-on-hover"
+                            style={{ borderRadius: 0 }}
+                            onClick={() => window.location.href = `/product/${item._id}`}
+                          >
+                            view
+                          </button>
+                        </div>
                       </div>
-                      <div style={{ float: 'right', paddingBottom: 5, paddingRight: 5 }}>
-                        <button
-                          className="glow-on-hover"
-                          style={{ borderRadius: 0 }}
-                          onClick={() => window.location.href = `/product/${item._id}`}
-                        >
-                          view
-                        </button>
-                      </div>
+
                     </div>
                   </Col>
                 ))
@@ -128,7 +138,7 @@ const Home = () => {
     console.log('categories from server:', result)
     if (result) {
       setCategories(result);
-      const options = Object.keys(result).map((category) =>  ({ value: category, label: result[category] }))
+      const options = Object.keys(result).map((category) => ({ value: category, label: result[category] }))
       console.log('assembled cat options:', options)
       setCategoryOptions(options)
     }
@@ -136,7 +146,7 @@ const Home = () => {
 
   return (
     <>
-      <Space.Compact style={{ float: 'left', paddingBottom:0, width: '100%' }}>
+      <Space.Compact style={{ float: 'left', paddingBottom: 0, width: '100%' }}>
         <div
           style={{
             border: '2px solid rgb(57, 113, 30)',
@@ -182,7 +192,7 @@ const Home = () => {
       {/* <Selectables /> */}
       {
         shuffleArray(Object.keys(categories)).map((category) => (
-          <div style={{ }}>
+          <div style={{}}>
             <CategoryListing category={category} title={categories[category]} />
           </div>
         ))

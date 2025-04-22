@@ -259,7 +259,7 @@ const EditProduct: React.FC = () => {
                 </div>
                 <p style={{ lineHeight: 0, fontSize: mobile ? 12 : 15, marginTop: -10, color: 'grey' }}>{'5 days ago'}</p>
                 <p style={{ fontSize: mobile ? 15 : 16, color: 'grey', marginTop: 27 }}><MdLocationPin style={{ marginBottom: -2, color: 'green' }} />{data.location}</p>
-                <p style={{ fontSize: mobile ? 15 : 16 }}>{data.description}</p>
+                <p style={{ whiteSpace: 'pre-line', fontSize: mobile ? 15 : 16 }}>{data.description}</p>
               </div>
             </Col>
             <Col xs={24} sm={12} md={12} lg={12} xl={9}>
