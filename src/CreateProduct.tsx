@@ -239,6 +239,14 @@ const NewProduct: React.FC = () => {
     setPreviewList(newList);
   };
 
+  const validateImages = async (rule, getValueByDataKey, callback) => {
+    if (fileList.length === 0) {
+      callback('Please select at least one image.')
+    } else {
+      callback();
+    }
+  }
+
   const submit = async () => {
     if (jwt) {
       const compressedFiles = await compressImages(fileList);
@@ -260,6 +268,11 @@ const NewProduct: React.FC = () => {
     }
   }
 
+  const onFinish = async (values) => {
+    console.log('Received values of form: ', values);
+  };
+
+
   const uploadButton = (
     <button style={{ border: 0, background: 'none' }} type="button">
       <PlusOutlined />
@@ -274,7 +287,7 @@ const NewProduct: React.FC = () => {
       >
         <div style={{ minHeight: '100vh' }}>
           <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 20 }, 18]}>
-            <Col xs={24} sm={12} md={12} lg={12} xl={15}>
+            <Col xs={24} sm={24} md={24} lg={15} xl={15}>
               <Carousel arrows infinite={false} autoplay={{ dotDuration: true }} autoplaySpeed={5000}>
                 {
                   previewList.map((file, index) => (
@@ -309,7 +322,7 @@ const NewProduct: React.FC = () => {
                 <p style={{ whiteSpace: 'pre-line', fontSize: mobile ? 15 : 16 }}>{data.description}</p>
               </div>
             </Col>
-            <Col xs={24} sm={12} md={12} lg={12} xl={9}>
+            <Col xs={24} sm={24} md={24} lg={9} xl={9}>
               <>
                 <Form
                   labelCol={{ span: 6 }}
@@ -317,10 +330,21 @@ const NewProduct: React.FC = () => {
                   layout="horizontal"
                   disabled={formDisabled}
                   style={{ maxWidth: 600, color: 'white' }}
-                // action={}
+                  onFinish={onFinish}
+                  initialValues={{
+                    remember: true,
+                  }}
                 >
-                  <Form.Item label={<p>Upload</p>} valuePropName="fileList" getValueFromEvent={normFile}>
+                  <Form.Item
+                    label={<p>Upload</p>}
+                    valuePropName="fileList"
+                    getValueFromEvent={normFile}
+                    rules={[
+                      { validator: validateImages }
+                    ]}
+                  >
                     <Upload
+                      // todo: limit file types to images
                       action={`/poop`}
                       listType="picture-card"
                       fileList={fileList}
@@ -328,7 +352,7 @@ const NewProduct: React.FC = () => {
                       // beforeUpload={beforeUpload}
                       onChange={handleImageChange}
                       maxCount={4}
-                      showErrorIcon={false}
+                    // showErrorIcon={false}
                     >
                       {fileList.length >= 8 ? null : uploadButton}
                     </Upload>
@@ -348,9 +372,17 @@ const NewProduct: React.FC = () => {
                     <Input
                       value={data.name}
                       onChange={(e) => handleChange('name', e)}
+                      rules={[
+                        { required: true, message: 'Please name what you are selling' }
+                      ]}
                     />
                   </Form.Item>
-                  <Form.Item label={<p>Price</p>}>
+                  <Form.Item
+                    rules={[
+                      { required: true, message: 'Price is required' }
+                    ]}
+                    label={<p>Price</p>}
+                  >
                     <Space.Compact>
                       <Select
                         defaultValue={'USD$'}
@@ -452,6 +484,15 @@ const NewProduct: React.FC = () => {
                       rows={4}
                     />
                   </Form.Item>
+                  {/* <Form.Item style={{ float: 'right' }}>
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      className='glow-on-hover'
+                    >
+                      Register
+                    </Button>
+                  </Form.Item> */}
                   <div style={{ maxWidth: 600, float: 'right', marginRight: 'auto' }}>
                     <Button disabled={loading} onClick={submit}>
                       <MdWindPower color={loading ? 'grey' : 'green'} />

@@ -1,66 +1,109 @@
-import React, { useState } from 'react';
-import { Badge, Card, Space, Input, message } from 'antd';
-import { MdOutlineEmail, MdPassword } from 'react-icons/md'
-
+// @ts-nocheck
 import { signin } from './auth/api-auth';
-import auth from './auth/auth-helper'
+import auth from './auth/auth-helper';
 
-import './xau.css'
+import "./components/fancy-buttons/hover.glow.css";
 
+import React, { useState } from 'react';
+import { Form, Input, Button, ConfigProvider, theme, message } from 'antd';
+import { Fade } from 'react-awesome-reveal';
 
-const SignIn: React.FC = () => {
-  const [data, setData] = useState({
-    email: '',
-    password: ''
-  });
+const SignIn = () => {
+  const mobile = window.innerWidth < 500;
+  const [form] = Form.useForm();
 
-  const handleChange = (name: string, event: { target: { value: any } }) => {
-    setData({ ...data, [name]: event.target.value });
-    console.log(data)
-  }
-
-  const submit = async () => {
-    const params = {
-      email: data.email,
-      password: data.password
-    }
-
-    const result = await signin(params);
-    console.log(result)
+  const onFinish = async (values) => {
+    const result = await signin(values)
     if (result && result.token) {
       auth.authenticate(result)
       message.success('Sign up successful!');
       window.location.href = '/'
     }
-
-  }
+  };
 
   return (
-    <div style={{ textAlign: 'center' }}>
-      <Space direction="vertical" size="middle" style={{ width: '100%', maxWidth: 500, marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
-        <Badge.Ribbon text="Welcome" color="green" style={{}}>
-          <Card size="small" style={{ color: 'white', background: 'black', border: 'none' }}>
-            <p style={{ fontSize: 31 }}>Sign In</p>
-            <Space.Compact style={{ width: '70%' }}>
-              <MdOutlineEmail size={40} style={{ paddingRight: 10 }} />
-              <Input style={{ width: '100%' }} placeholder='Email' size='large' onChange={(e) => handleChange('email', e)} />
-            </Space.Compact>
-            <Space.Compact style={{ width: '70%', paddingTop: 20 }}>
-              <MdPassword size={40} style={{ paddingRight: 10 }} />
-              <Input style={{ width: '100%' }} placeholder='Password' size='large' type='password' onChange={(e) => handleChange('password', e)} />
-            </Space.Compact>
-            <p>Don't have an account? <a href='/register'>Register</a></p>
+    <ConfigProvider
+    // theme={{ algorithm: [theme.darkAlgorithm], token: { colorBgContainer: '#292929' } }}
+    >
+      <div style={{ minHeight: '70vh' }}>
+        <Fade direction='up' triggerOnce>
+          <div
+            style={{
+              maxWidth: mobile ? 400 : 450,
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              background: 'black',
+              boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+              padding: 10,
+              borderRadius: 5,
+              paddingBottom: 50,
+              marginTop: mobile ? 0 : 50
+            }}
+          >
+            <Fade triggerOnce>
+              <p style={{ textAlign: 'center', fontSize: 22, letterSpacing: 2 }}>Sign In</p>
+            </Fade>
+            <Fade delay={2000} triggerOnce>
+              <p
+                style={{
+                  textAlign: 'center',
+                  fontSize: mobile ? 14 : 15,
+                  marginTop: -15,
+                  color: 'grey'
+                }}>
+                Welcome back
+              </p>
+            </Fade>
+            <Form
+              labelCol={{ span: 24 }}
+              wrapperCol={{ span: 24 }}
+              wrapperCol={{}}
+              name="basic"
+              onFinish={onFinish}
+              initialValues={{
+                remember: true,
+              }}
+              autoComplete="off"
+            >
+              <Form.Item
+                label=<span style={{ fontSize: 15, color: 'white' }}>Email</span>
+                name="email"
+                rules={[
+                  { required: true, message: 'Please enter your email!' },
+                  { type: 'email', message: 'The input is not valid email!' },
+                ]}
+              >
+                <Input />
+              </Form.Item>
 
-            <div style={{ paddingRight: '15%', paddingTop: 10, paddingBottom: 100 }}>
-              <button style={{ float: 'right' }} onClick={submit}>
-                Sign In
-              </button>
-            </div>
-          </Card>
-        </Badge.Ribbon>
-      </Space>
-    </div>
+              <Form.Item
+                label=<span style={{ fontSize: 15, color: 'white' }}>Password</span>
+                name="password"
+                rules={[{ required: true, message: 'Please enter your password!' }]}
+                hasFeedback
+              >
+                <Input.Password />
+              </Form.Item>
+
+              <p style={{ textAlign: 'center', fontSize: 15 }}>Don't have an account?{' '}
+                <a href='/register'>Register</a>
+              </p>
+
+              <Form.Item style={{ float: 'right' }}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className='glow-on-hover'
+                >
+                  Sign In
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
+        </Fade>
+      </div>
+    </ConfigProvider>
   );
-}
+};
 
 export default SignIn;

@@ -227,7 +227,7 @@ const EditProduct: React.FC = () => {
       >
         <div style={{ minHeight: '100vh' }}>
           <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 20 }, 18]}>
-            <Col xs={24} sm={12} md={12} lg={12} xl={15}>
+            <Col xs={24} sm={24} md={24} lg={12} xl={15}>
               <Carousel arrows infinite={false} autoplay={{ dotDuration: true }} autoplaySpeed={5000}>
                 {
                   data.images.map((imageUrl, index) => (
@@ -262,7 +262,7 @@ const EditProduct: React.FC = () => {
                 <p style={{ whiteSpace: 'pre-line', fontSize: mobile ? 15 : 16 }}>{data.description}</p>
               </div>
             </Col>
-            <Col xs={24} sm={12} md={12} lg={12} xl={9}>
+            <Col xs={24} sm={24} md={24} lg={12} xl={9}>
               <>
                 <Form
                   labelCol={{ span: 6 }}

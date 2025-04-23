@@ -83,13 +83,15 @@ const CategoryListing = ({ category, title }) => {
                         {formatString(item.name, 64)}  
                         </p>
                         <p
+                          // className="gradient-container"
                           style={{
                             marginTop: -5,
                             fontSize: mobile ? 14 : 15,
                             // background: 'rgb(103, 188, 60)',
-                            background: 'linear-gradient(to left, rgb(112, 114, 115), black 50%)',
+                            background: 'linear-gradient(to left, rgb(135, 153, 126), black 70%)',
                             padding: 5,
                             paddingLeft: 2,
+                            borderRadius: 5
                           }}
                         >
                           {item.currency}{" "}{formatPrice(item.price)}

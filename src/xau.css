@@ -52,6 +52,23 @@ li {
   border-radius: 5px; */
 }
 
+.gradient-container {
+  background: linear-gradient(to left, rgb(135, 153, 126), black 70%); /* Initial gradient */
+  animation: gradientAnimation 2s infinite alternate;
+  transition: opacity .3s ease-in-out;
+}
+
+/* Define the keyframes for animation */
+@keyframes gradientAnimation {
+  from {
+      background: linear-gradient(to left, rgb(175, 175, 175), black 70%);
+  }
+  to {
+      background: linear-gradient(to left, rgb(135, 153, 126), black 70%); /* Final gradient */
+  }
+}
+
+
 @keyframes glow {
   0% { background-position: 0 0; }
   50% { background-position: 400% 0; }

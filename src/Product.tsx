@@ -164,7 +164,7 @@ const Product = () => {
     <>
       <div style={{ minHeight: '100vh' }}>
         <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 20 }, 18]}>
-          <Col xs={24} sm={12} md={12} lg={12} xl={15}>
+          <Col xs={24} sm={24} md={24} lg={12} xl={15}>
             <Carousel arrows infinite={false} autoplay={{ dotDuration: true }} autoplaySpeed={5000}>
               {
                 data.images.map((imageUrl, index) => (
@@ -231,7 +231,7 @@ const Product = () => {
               )
             }
           </Col>
-          <Col xs={24} sm={12} md={12} lg={12} xl={9}>
+          <Col xs={24} sm={24} md={24} lg={12} xl={9}>
             <div style={{ textAlign: 'center' }}>
               <div style={{ textAlign: 'left', paddingLeft: mobile ? 0 : '7%', paddingBottom: 5 }}>
                 <MdLocationPin style={{ fontSize: 18, marginBottom: -4, color: 'green' }} />

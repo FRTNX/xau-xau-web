@@ -200,6 +200,10 @@ const MainLayout: React.FC = ({ children }) => {
             15000,
             'Xau-Xau',
             1000,
+            "Xau",
+            15000,
+            'Xau-Xau',
+            1000,
             'Xawu-Xawu',
             1000,
           ]}
@@ -228,11 +232,17 @@ const MainLayout: React.FC = ({ children }) => {
               collapsedWidth="50"
               collapsed={desktopSidebarCollapsed}
               onBreakpoint={(broken) => {
-                console.log(broken);
+                console.log('break pooint;', broken);
+                if (broken) {
+                  setDesktopSidebarCollapsed(true);
+                } else {
+                  setDesktopSidebarCollapsed(false);
+                }
               }}
               onCollapse={(collapsed, type) => {
                 console.log(collapsed, type);
               }}
+              
             >
               <div className="demo-logo-vertical" />
               <Menu
