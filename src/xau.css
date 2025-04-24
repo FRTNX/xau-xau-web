@@ -58,6 +58,43 @@ li {
   transition: opacity .3s ease-in-out;
 }
 
+.gradient-background {
+  background: linear-gradient(124deg,#681b50,#207f15,#6c66eb,#55e38d,#42f2b8);
+  background-size: 300% 300%;
+  animation: gradient-animation 35s ease infinite;
+}
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-gradient {
+	background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+	height: 100vh;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
 /* Define the keyframes for animation */
 @keyframes gradientAnimation {
   from {

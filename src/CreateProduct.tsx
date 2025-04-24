@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Image, Upload } from 'antd';
-import type { GetProp, UploadFile, UploadProps } from 'antd';
+import { GetProp, UploadFile, UploadProps, message } from 'antd';
 
 import { Carousel, Col, Row } from 'antd';
 
@@ -17,6 +17,8 @@ import {
   theme
 } from 'antd';
 
+import { MdPriceChange } from 'react-icons/md';
+import { MdWhatsapp, MdMail } from 'react-icons/md';
 import { MdImage, MdLocationPin, MdWindPower } from 'react-icons/md';
 
 import imageCompression from 'browser-image-compression';
@@ -25,9 +27,11 @@ import { createProduct, createThumbnail } from './api/product.api';
 import { formatPrice } from './utils';
 import config from './config/config';
 
-const { TextArea } = Input;
-
 import auth from './auth/auth-helper';
+
+import MessageBox from './MessageBox';
+
+const { TextArea } = Input;
 
 const normFile = (e: any) => {
   if (Array.isArray(e)) {
@@ -70,6 +74,7 @@ const NewProduct: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState<number>();
   const [email, setEmail] = useState('');
 
+  const [location, setLocation] = useState('');
   const [imageBlobs, setImageBlobs] = useState([]);
 
   const [base64String, setBase64String] = useState('');
@@ -79,21 +84,134 @@ const NewProduct: React.FC = () => {
   const [compressedImages, setCompressedImages] = useState([]);
 
   const [thumbnail, setThumbnail] = useState([]);
+  const [msgBoxOpen, setMsgBoxOpen] = useState(false);
+
+  const [fdata, setFdata] = useState();
 
   const [data, setData] = useState({
     name: 'Item Title',
     description: 'Item Description.',
-    location: 'Bulawayo',
-    category: 'Computers',
-    created: '5 days ago'
-  })
+    location: ''
+  });
 
-  const [fdata, setFdata] = useState();
+  const [locations, setLocations] = useState([
+    "Nationwide",
+    "Online",
+    "Harare",
+    "Bulawayo",
+    "Gweru",
+    "Bindura",
+    "Mutare",
+    "Masvingo",
+    "Zvishavane",
+    "Chinhoyi",
+    "Mutoko",
+    "Chiruma",
+    "Dzaloniya",
+    "Kezi",
+    "Nkayi",
+    "Gwanda",
+    "Matopo",
+    "Victoria Falls"
+  ]);
+
+  const [helperText, setHelperText] = useState({
+    upload: { text: '', color: '' },
+    name: { text: '', color: '' },
+    price: { text: '', color: '' },
+    category: { text: '', color: '' },
+    status: { text: '', color: '' },
+    contactMethod: { text: '', color: '' },
+    phoneNumber: { text: "Tip: use the format '786547877' instead of '0786547877'", color: '' },
+    email: { text: '', color: '' },
+    location: { text: '', color: '' },
+    description: { text: '', color: '' }
+  });
+
+  const colors = {
+    success: 'green',
+    warning: 'yellow',
+    error: 'red'
+  }
+
+  const validPhoneNumber = () => {
+    const violations = String(phoneNumber).length !== 9;
+    console.log('violations', violations)
+    return !violations;
+  }
+
+  const validateProduct = () => {
+    let issues = false;
+    let updateValues = {
+      upload: { text: '', color: '' },
+      name: { text: '', color: '' },
+      price: { text: '', color: '' },
+      category: { text: '', color: '' },
+      status: { text: '', color: '' },
+      contactMethod: { text: '', color: '' },
+      phoneNumber: { text: '', color: '' },
+      email: { text: '', color: '' },
+      location: { text: '', color: '' },
+      description: { text: '', color: '' }
+    };
+    const add = (params) => {
+      updateValues = { ...updateValues, ...params }
+      issues = true;
+    }
+
+    if (fileList.length === 0) {
+      add({ upload: { text: 'Please select at least one image', color: colors.error } });
+    }
+
+    if (!data.name || data.name === 'Item Title') {
+      add({ name: { text: 'Item name is required', color: colors.error } });
+    }
+
+    if (price < 1) {
+      add({ price: { text: 'Product cannot be free. Kusemhlabeni', color: colors.error } });
+    }
+
+    if (!category) {
+      add({ category: { text: 'Item category is required', color: colors.error } });
+    }
+
+    if (contactMethod === 'WA') {
+      if (!phoneNumber) {
+        add({ phoneNumber: { text: 'Whatsapp number is required', color: colors.error } });
+      }
+
+      if (!validPhoneNumber()) {
+        add({ phoneNumber: { text: 'Invalid phone number', color: colors.error } });
+      }
+    }
+
+    if (contactMethod === 'MAIL') {
+      if (!email) {
+        add({ email: { text: 'Email address is required', color: colors.error } });
+      }
+    }
+
+    if (!location) {
+      add({ location: { text: 'Item location is required', color: colors.error } });
+    }
+
+    if (!data.description || data.description === 'Item Description.') {
+      add({ description: { text: 'Item description is required', color: colors.error } });
+    }
+
+    if (data.description.length < 150) {
+      add({ description: { text: 'Item description must be at least 150 characters', color: colors.error } });
+    }
+    console.log('found product issues:', { ...helperText, ...updateValues })
+
+    setHelperText(current => ({ ...helperText, ...updateValues }))
+
+    return !issues;
+  }
 
   useEffect(() => {
     console.log('effecting', compressedImages.length, fileList.length, thumbnail.length)
     if ((compressedImages.length === fileList.length) && fdata && thumbnail.length === 1) {
-      setLoading(false)
       compressedImages.map((file) => {
         fdata.append(`images`, file);
       });
@@ -109,9 +227,13 @@ const NewProduct: React.FC = () => {
       thumbnailForm.append('thumbnail', thumbnail[0]);
       const res = await createThumbnail(result.productId, thumbnailForm);
       console.log('thumbnail creation result:', res)
-
+      message.success('Success!')
       //todo: validate thumbnail res before redirecting
       window.location.href = `/product/${result.productId}`
+    } else {
+      setLoading(false);
+      message.success('Submission failed.')
+      setHelperText({ ...helperText, description: { text: 'An upload error occured. Check your connection and try again', color: colors.error}})
     }
   }
 
@@ -126,16 +248,14 @@ const NewProduct: React.FC = () => {
 
   const compressImages = async (files) => {
     setLoading(true);
+    setCompressedImages(current => [])
     await files.map(async (imageFile, index) => {
       const file = imageFile.originFileObj;
-      console.log('compressing:', file)
       const reader = new FileReader();
 
       reader.onloadend = async () => {
         const arrayBuffer = reader.result;
         const blob = new Blob([arrayBuffer], { type: file.type })
-        console.log('is it a fucking blob:', blob instanceof Blob)
-        console.log(`originalFile size ${blob.size / 1024 / 1024} MB`);
 
         const options = {
           maxSizeMB: 1,
@@ -144,8 +264,6 @@ const NewProduct: React.FC = () => {
 
         try {
           const compressedFile = await imageCompression(file, options);
-          console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
-          console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
 
           setCompressedImages(current => [...current, compressedFile])
         } catch (error) {
@@ -160,8 +278,6 @@ const NewProduct: React.FC = () => {
 
           try {
             const compressedThumbnail = await imageCompression(file, thumbOptions);
-            console.log('thumbnail instanceof Blob', compressedThumbnail instanceof Blob); // true
-            console.log(`thumbnail size ${compressedThumbnail.size / 1024 / 1024} MB`); // smaller than maxSizeMB
 
             setThumbnail(current => [compressedThumbnail])
           } catch (error) {
@@ -181,20 +297,17 @@ const NewProduct: React.FC = () => {
   }
 
   const handleChange = (name, event) => {
-    console.log(`updating ${name} with ${event.target.value}`)
     setData({ ...data, [name]: event.target.value });
   }
 
   const handlePriceChange = (newPrice: number | null) => {
     if (newPrice) {
-      console.log('price event:', newPrice)
       setPrice(newPrice)
     }
   }
 
   const handleChangeCurrency = (newCurrency: string | null) => {
     if (newCurrency) {
-      console.log('category event:', newCurrency)
       setCurrency(newCurrency);
     }
   };
@@ -227,6 +340,12 @@ const NewProduct: React.FC = () => {
     }
   }
 
+  const handleChangeLocation = (newLocation: string | null) => {
+    if (newLocation) {
+      setLocation(newLocation)
+    }
+  }
+
   const handleChangeStatus = (newStatus: string | null) => {
     if (newStatus) {
       setStatus(newStatus)
@@ -239,6 +358,14 @@ const NewProduct: React.FC = () => {
     setPreviewList(newList);
   };
 
+  const toggleMsgBox = () => {
+    if (msgBoxOpen) {
+      setMsgBoxOpen(false);
+    } else {
+      setMsgBoxOpen(true);
+    }
+  }
+
   const validateImages = async (rule, getValueByDataKey, callback) => {
     if (fileList.length === 0) {
       callback('Please select at least one image.')
@@ -248,7 +375,7 @@ const NewProduct: React.FC = () => {
   }
 
   const submit = async () => {
-    if (jwt) {
+    if (validateProduct()) {
       const compressedFiles = await compressImages(fileList);
       const formData = new FormData();
       const userId = jwt.user._id;
@@ -272,6 +399,10 @@ const NewProduct: React.FC = () => {
     console.log('Received values of form: ', values);
   };
 
+  const HelperText = ({ text, color }) => 
+  <div style={{ paddingBottom: mobile ? 0 : 12}}>
+    <span style={{ color }}>{text}</span>
+  </div>
 
   const uploadButton = (
     <button style={{ border: 0, background: 'none' }} type="button">
@@ -283,7 +414,13 @@ const NewProduct: React.FC = () => {
   return (
     <>
       <ConfigProvider
-        theme={{ algorithm: [theme.darkAlgorithm], token: { colorBgContainer: '#292929' } }}
+        theme={{
+          algorithm: [theme.darkAlgorithm],
+          token: {
+            colorBgContainer: '#292929',
+            colorError: 'rgb(91, 156, 78)'
+          }
+        }}
       >
         <div style={{ minHeight: '100vh' }}>
           <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 20 }, 18]}>
@@ -312,15 +449,68 @@ const NewProduct: React.FC = () => {
               }
               <div>
                 <div style={{ marginTop: -10 }}>
-                  <p style={{ display: 'inline-block', fontSize: mobile ? 18 : 25 }}>{data.name}</p>
-                  <p style={{ display: 'inline-block', float: 'right', fontSize: mobile ? 18 : 25 }}>
-                    {currency}{" "}{formatPrice(price)}
+                  <p style={{ fontSize: mobile ? 23 : 25, lineHeight: 1.3 }}>{data.name}</p>
+                  <p style={{ fontSize: 17, marginTop: -20 }}>
+                    {currency}{" "}{formatPrice(price)} <MdPriceChange style={{ color: 'rgb(117, 170, 106)' }} />
                   </p>
                 </div>
-                <p style={{ lineHeight: 0, fontSize: mobile ? 12 : 15, marginTop: -10, color: 'grey' }}>{'5 days ago'}</p>
-                <p style={{ fontSize: mobile ? 15 : 16, color: 'grey', marginTop: 27 }}><MdLocationPin style={{ marginBottom: -2, color: 'green' }} />{data.location}</p>
+                <p style={{ lineHeight: 0, fontSize: mobile ? 12 : 15, marginTop: -5, color: 'grey' }}>{'[date section]'}</p>
+                <p style={{ fontSize: mobile ? 15 : 16, color: 'grey', marginTop: 25, marginLeft: -5 }}><MdLocationPin style={{ marginBottom: -2, color: 'green' }} />{location}</p>
                 <p style={{ whiteSpace: 'pre-line', fontSize: mobile ? 15 : 16 }}>{data.description}</p>
               </div>
+              {
+                contactMethod === 'WA' && phoneNumber && validPhoneNumber() &&  (
+                  <div style={{ float: 'right', paddingTop: 100 }}>
+                    <button
+                      onClick={() => window.open(`https://wa.me/${countryCode}${phoneNumber}`)}
+                      style={{ background: 'green', padding: 9, fontSize: mobile ? 13 : 16 }}
+                    >
+                      <MdWhatsapp style={{ marginBottom: -6, fontSize: mobile ? 20 : 22, paddingRight: 1 }} />
+                      Chat on Whatsapp
+                    </button>
+                  </div>
+                )
+              }
+              {
+                contactMethod === 'MAIL' && email && (
+                  <div
+                    style={{
+                      float: 'right',
+                      width: mobile ? '100%' : '60%',
+                      paddingBottom: mobile ? 100 : 0,
+                      paddingTop: 100
+                    }}
+                    >
+                    <div>
+                      <div style={{ float: 'right' }}>
+                        <button
+                          // className="glow-on-hover"
+                          onClick={toggleMsgBox}
+                          style={{
+                            background:'rgb(156, 193, 171)',
+                            padding: 7,
+                            paddingBottom: 10,
+                            fontSize: 13,
+                            color: msgBoxOpen ? 'rgb(0,0,0)' : 'rgb(0, 0, 0)',
+                            fontWeight: 600,
+                            borderRadius: 5
+                          }}
+                        >
+                          <MdMail style={{ marginBottom: -7, fontSize: 22, paddingRight: 1 }} />
+                          {"Send a test email"}
+                        </button>
+                      </div>
+                      {
+                        msgBoxOpen && (
+                          <div style={{ paddingTop: mobile ? 40 : 70 }}>
+                            <MessageBox />
+                          </div>
+                        )
+                      }
+                    </div>
+                  </div>
+                )
+              }
             </Col>
             <Col xs={24} sm={24} md={24} lg={9} xl={9}>
               <>
@@ -339,9 +529,7 @@ const NewProduct: React.FC = () => {
                     label={<p>Upload</p>}
                     valuePropName="fileList"
                     getValueFromEvent={normFile}
-                    rules={[
-                      { validator: validateImages }
-                    ]}
+                    help={<HelperText {...helperText.upload} />}
                   >
                     <Upload
                       // todo: limit file types to images
@@ -349,10 +537,9 @@ const NewProduct: React.FC = () => {
                       listType="picture-card"
                       fileList={fileList}
                       onPreview={handlePreview}
-                      // beforeUpload={beforeUpload}
                       onChange={handleImageChange}
                       maxCount={4}
-                    // showErrorIcon={false}
+                      className='upload-box'
                     >
                       {fileList.length >= 8 ? null : uploadButton}
                     </Upload>
@@ -368,20 +555,19 @@ const NewProduct: React.FC = () => {
                       />
                     )}
                   </Form.Item>
-                  <Form.Item label={<p>Item Name</p>}>
+                  <Form.Item
+                    label={<p>Item Name</p>}
+                    help={<HelperText {...helperText.name} />}
+                  >
                     <Input
                       value={data.name}
                       onChange={(e) => handleChange('name', e)}
-                      rules={[
-                        { required: true, message: 'Please name what you are selling' }
-                      ]}
+                      maxLength={60}
                     />
                   </Form.Item>
                   <Form.Item
-                    rules={[
-                      { required: true, message: 'Price is required' }
-                    ]}
                     label={<p>Price</p>}
+                    help={<HelperText {...helperText.price} />}
                   >
                     <Space.Compact>
                       <Select
@@ -401,7 +587,10 @@ const NewProduct: React.FC = () => {
                       />
                     </Space.Compact>
                   </Form.Item>
-                  <Form.Item label={<p>Category</p>}>
+                  <Form.Item
+                    label={<p>Category</p>}
+                    help={<HelperText {...helperText.category} />}
+                  >
                     <Select
                       style={{}}
                       onChange={handleChangeCategory}
@@ -411,19 +600,10 @@ const NewProduct: React.FC = () => {
                       <Select.Option value="accomodation">Accomodation: Houses, Rooms, Land</Select.Option>
                       <Select.Option value="home_goods">Home Goods: Furniture & Appliances</Select.Option>
                       <Select.Option value="services">Services</Select.Option>
+                      <Select.Option value="events">Events</Select.Option>
                       <Select.Option value="collectables">Art & Collectables</Select.Option>
                       <Select.Option value="food_bev">Food & Beverages</Select.Option>
                       <Select.Option value="other">Other</Select.Option>
-                    </Select>
-                  </Form.Item>
-                  <Form.Item label={<p>Status</p>}>
-                    <Select
-                      defaultValue={'AV'}
-                      style={{}}
-                      onChange={handleChangeStatus}
-                    >
-                      <Select.Option value="AV">Available</Select.Option>
-                      <Select.Option value="UA">Sold</Select.Option>
                     </Select>
                   </Form.Item>
                   <Form.Item label={<p>Contact Method</p>}>
@@ -438,7 +618,7 @@ const NewProduct: React.FC = () => {
                   </Form.Item>
                   {
                     contactMethod === 'WA' && (
-                      <Form.Item label={<p>Whatsapp Number</p>}>
+                      <Form.Item label={<p>Whatsapp Number</p>} help={<HelperText {...helperText.phoneNumber} />}>
                         <Space.Compact>
                           <Select
                             defaultValue={'263'}
@@ -456,13 +636,12 @@ const NewProduct: React.FC = () => {
                             onChange={handleChangePhoneNumber}
                           />
                         </Space.Compact>
-
                       </Form.Item>
                     )
                   }
                   {
                     contactMethod === 'MAIL' && (
-                      <Form.Item label={<p>Email Address</p>}>
+                      <Form.Item label={<p>Email Address</p>} help={<HelperText {...helperText.email} />}>
                         <Input
                           value={email}
                           onChange={handleChangeEmail}
@@ -471,30 +650,31 @@ const NewProduct: React.FC = () => {
                       </Form.Item>
                     )
                   }
-                  <Form.Item label={<p>Location</p>}>
-                    <Input
-                      value={data.location}
-                      onChange={(e) => handleChange('location', e)}
-                    />
+                  <Form.Item
+                    label={<p>Location</p>}
+                    help={<HelperText {...helperText.location} />}
+                    style={{ }}
+                  >
+                    <Select
+                      style={{}}
+                      onChange={handleChangeLocation}
+                    >
+                      {
+                        locations.map((loc) => <Select.Option value={loc}>{loc}</Select.Option>)
+                      }
+                    </Select>
                   </Form.Item>
-                  <Form.Item label={<p>Description</p>}>
+                  <Form.Item label={<p>Description</p>} help={<HelperText {...helperText.description} />}>
                     <TextArea
                       value={data.description}
+                      style={{ minHeight: 100 }}
+                      maxLength={1700}
                       onChange={(e) => handleChange('description', e)}
-                      rows={4}
+                      autoSize
                     />
                   </Form.Item>
-                  {/* <Form.Item style={{ float: 'right' }}>
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      className='glow-on-hover'
-                    >
-                      Register
-                    </Button>
-                  </Form.Item> */}
-                  <div style={{ maxWidth: 600, float: 'right', marginRight: 'auto' }}>
-                    <Button disabled={loading} onClick={submit}>
+                  <div style={{ maxWidth: 600, float: 'right', marginRight: 'auto', paddingTop: mobile ? 30 : 0 }}>
+                    <Button disabled={loading} onClick={submit} >
                       <MdWindPower color={loading ? 'grey' : 'green'} />
                       Submit</Button>
                   </div>
@@ -503,7 +683,7 @@ const NewProduct: React.FC = () => {
             </Col>
           </Row>
         </div>
-      </ConfigProvider>
+      </ConfigProvider >
     </>
   )
 };

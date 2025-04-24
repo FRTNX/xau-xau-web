@@ -7,7 +7,7 @@ import { Input, Form } from 'antd';
 import type { GetProps } from 'antd';
 
 import { EditFilled } from '@ant-design/icons';
-import { MdLocationPin } from 'react-icons/md';
+import { MdLocationPin, MdPriceChange } from 'react-icons/md';
 
 import { formatPrice } from './utils';
 import { fetchProduct, productEmail } from './api/product.api';
@@ -180,16 +180,13 @@ const Product = () => {
             </Carousel>
             <div>
               <div style={{ marginTop: -10 }}>
-                <p style={{ display: 'inline-block', fontSize: mobile ? 18 : 25 }}>{data.name}</p>
-                <p style={{ display: 'inline-block', float: 'right', fontSize: mobile ? 18 : 25 }}>
-                  {data.currency}{" "}{formatPrice(data.price)}
-                  {
-                    !mobile && <EditButton />
-                  }
+                <p style={{ fontSize: mobile ? 23 : 25, lineHeight: 1.3 }}>{data.name}</p>
+                <p style={{ fontSize: 17, marginTop: -20 }}>
+                  {data.currency}{" "}{formatPrice(data.price)} <MdPriceChange style={{ color: 'rgb(117, 170, 106)' }} />
                 </p>
               </div>
-              <p style={{ lineHeight: 0, fontSize: mobile ? 12 : 15, marginTop: -10, color: 'grey' }}>{dayjs(data.created).fromNow()}</p>
-              <p style={{ fontSize: mobile ? 15 : 16, color: 'grey', marginTop: 27 }}><MdLocationPin style={{ marginBottom: -2, color: 'green' }} />{data.location}</p>
+              <p style={{ lineHeight: 0, fontSize: mobile ? 12 : 15, marginTop: -5, color: 'grey' }}>{dayjs(data.created).fromNow()}</p>
+              <p style={{ fontSize: mobile ? 15 : 16, color: 'grey', marginTop: 25, marginLeft: -5 }}><MdLocationPin style={{ marginBottom: -2, color: 'green' }} />{data.location}</p>
               <p style={{ whiteSpace: 'pre-line', fontSize: mobile ? 15 : 16 }}>{data.description}</p>
             </div>
             {

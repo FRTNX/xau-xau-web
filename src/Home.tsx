@@ -6,7 +6,7 @@ import config from "./config/config";
 
 import { fetchProducts, fetchCategories } from "./api/product.api";
 
-import { MdLocationPin } from "react-icons/md";
+import { MdLocationPin, MdPriceChange } from "react-icons/md";
 import { EyeOutlined } from "@ant-design/icons";
 
 import { formatPrice, shuffleArray } from "./utils";
@@ -80,21 +80,21 @@ const CategoryListing = ({ category, title }) => {
                             color: 'rgb(180, 182, 179)'
                           }}
                         >
-                        {formatString(item.name, 64)}  
+                          {formatString(item.name, 64)}
                         </p>
                         <p
                           // className="gradient-container"
                           style={{
-                            marginTop: -5,
+                            marginTop: -11,
                             fontSize: mobile ? 14 : 15,
                             // background: 'rgb(103, 188, 60)',
-                            background: 'linear-gradient(to left, rgb(135, 153, 126), black 70%)',
+                            // background: 'linear-gradient(to left, rgb(135, 153, 126), black 70%)',
                             padding: 5,
                             paddingLeft: 2,
                             borderRadius: 5
                           }}
                         >
-                          {item.currency}{" "}{formatPrice(item.price)}
+                          {item.currency}{" "}{formatPrice(item.price)} <MdPriceChange style={{ color: 'rgb(117, 170, 106)' }} />
                         </p>
                         <div style={{ display: 'inline-block', width: '70%', marginTop: -18 }}>
                           <p style={{ color: 'grey' }}><MdLocationPin style={{ marginTop: -10, marginBottom: -2, color: 'green' }} />{item.location}</p>
