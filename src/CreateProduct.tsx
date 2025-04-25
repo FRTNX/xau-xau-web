@@ -387,7 +387,7 @@ const NewProduct: React.FC = () => {
       currency && formData.append('currency', currency)
       status && formData.append('status', status);
       contactMethod && formData.append('contactMethod', contactMethod);
-      data.location && formData.append('location', data.location);
+      location && formData.append('location', location);
       phoneNumber && formData.append('phoneNumber', String(phoneNumber));
       countryCode && formData.append('countryCode', countryCode);
       email && formData.append('email', email);
