@@ -11,6 +11,10 @@ import { EyeOutlined } from "@ant-design/icons";
 
 import { formatPrice, shuffleArray } from "./utils";
 
+import { ScaleLoader, BounceLoader } from 'react-spinners'
+
+import Loader from "./Loader";
+
 import "./components/fancy-buttons/hover.glow.css";
 import './xau.css';
 
@@ -33,6 +37,7 @@ const AdSection = () => {
 const CategoryListing = ({ category, title }) => {
   const mobile = window.innerWidth < 500;
   const [items, setItems] = useState([]);
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     populateProducts();
@@ -43,6 +48,7 @@ const CategoryListing = ({ category, title }) => {
     console.log('got products:', result)
     if (result) {
       setItems(result);
+      setLoaded(true)
     }
   };
 
@@ -60,6 +66,7 @@ const CategoryListing = ({ category, title }) => {
               }}
             >{title}</p>
             <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 17 }, 18]}>
+
               {
                 items.map((item, index) => (
                   <Col xs={24} sm={12} md={12} lg={12} xl={6}>
@@ -148,7 +155,7 @@ const Home = () => {
   }
 
   return (
-    <>
+    <div style={{ minHeight: '80vh'}}>
       <Space.Compact style={{ float: 'left', paddingBottom: 0, width: '100%' }}>
         <div
           style={{
@@ -194,14 +201,21 @@ const Home = () => {
       </Space.Compact>
       {/* <Selectables /> */}
       {
+        Object.keys(categories).length === 0 && (
+          <div style={{ marginLeft: 'auto', marginRight: 'auto', textAlign: 'center', paddingTop: 200 }}>
+            <ScaleLoader color='white' />
+            <p>Loading Products</p>
+          </div>
+        )
+      }
+      {
         shuffleArray(Object.keys(categories)).map((category) => (
           <div style={{}}>
             <CategoryListing category={category} title={categories[category]} />
           </div>
         ))
       }
-
-    </>
+    </div>
   )
 }
 
