@@ -195,7 +195,7 @@ const Product = () => {
             </div>
             {
               data.contactMethod === 'WA' && data.phoneNumber && (
-                <div style={{ float: 'right' }}>
+                <div style={{ float: 'right', paddingTop: 100, paddingBottom: 100 }}>
                   <button
                     onClick={() => window.open(`https://wa.me/${data.countryCode}${data.phoneNumber}`)}
                     style={{ background: 'green', padding: 9, fontSize: 16 }}
