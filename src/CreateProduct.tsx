@@ -17,6 +17,8 @@ import {
   theme
 } from 'antd';
 
+import { runes } from 'runes2';
+
 import { MdPriceChange } from 'react-icons/md';
 import { MdWhatsapp, MdMail } from 'react-icons/md';
 import { MdImage, MdLocationPin, MdWindPower } from 'react-icons/md';
@@ -233,7 +235,7 @@ const NewProduct: React.FC = () => {
     } else {
       setLoading(false);
       message.success('Submission failed.')
-      setHelperText({ ...helperText, description: { text: 'An upload error occured. Check your connection and try again', color: colors.error}})
+      setHelperText({ ...helperText, description: { text: 'An upload error occured. Check your connection and try again', color: colors.error } })
     }
   }
 
@@ -399,10 +401,10 @@ const NewProduct: React.FC = () => {
     console.log('Received values of form: ', values);
   };
 
-  const HelperText = ({ text, color }) => 
-  <div style={{ paddingBottom: mobile ? 0 : 12}}>
-    <span style={{ color }}>{text}</span>
-  </div>
+  const HelperText = ({ text, color, padding=0}) =>
+    <div style={{ paddingBottom: mobile ? 0 : 12, paddingTop: padding }}>
+      <span style={{ color }}>{text}</span>
+    </div>
 
   const uploadButton = (
     <button style={{ border: 0, background: 'none' }} type="button">
@@ -459,7 +461,7 @@ const NewProduct: React.FC = () => {
                 <p style={{ whiteSpace: 'pre-line', fontSize: mobile ? 15 : 16 }}>{data.description}</p>
               </div>
               {
-                contactMethod === 'WA' && phoneNumber && validPhoneNumber() &&  (
+                contactMethod === 'WA' && phoneNumber && validPhoneNumber() && (
                   <div style={{ float: 'right', paddingTop: 100 }}>
                     <button
                       onClick={() => window.open(`https://wa.me/${countryCode}${phoneNumber}`)}
@@ -480,14 +482,14 @@ const NewProduct: React.FC = () => {
                       paddingBottom: mobile ? 100 : 0,
                       paddingTop: 100
                     }}
-                    >
+                  >
                     <div>
                       <div style={{ float: 'right' }}>
                         <button
                           // className="glow-on-hover"
                           onClick={toggleMsgBox}
                           style={{
-                            background:'rgb(156, 193, 171)',
+                            background: 'rgb(156, 193, 171)',
                             padding: 7,
                             paddingBottom: 10,
                             fontSize: 13,
@@ -534,6 +536,7 @@ const NewProduct: React.FC = () => {
                     <Upload
                       // todo: limit file types to images
                       action={`/poop`}
+                      accept='image/*'
                       listType="picture-card"
                       fileList={fileList}
                       onPreview={handlePreview}
@@ -562,7 +565,13 @@ const NewProduct: React.FC = () => {
                     <Input
                       value={data.name}
                       onChange={(e) => handleChange('name', e)}
-                      maxLength={60}
+                      // maxLength={60}
+                      count={{
+                        show: true,
+                        max: 60,
+                        strategy: (txt) => runes(txt).length,
+                        exceedFormatter: (txt, { max }) => runes(txt).slice(0, max).join(''),
+                      }}
                     />
                   </Form.Item>
                   <Form.Item
@@ -653,7 +662,7 @@ const NewProduct: React.FC = () => {
                   <Form.Item
                     label={<p>Location</p>}
                     help={<HelperText {...helperText.location} />}
-                    style={{ }}
+                    style={{}}
                   >
                     <Select
                       style={{}}
@@ -664,16 +673,22 @@ const NewProduct: React.FC = () => {
                       }
                     </Select>
                   </Form.Item>
-                  <Form.Item label={<p>Description</p>} help={<HelperText {...helperText.description} />}>
+                  <Form.Item label={<p>Description</p>} help={<HelperText {...helperText.description} padding={mobile ? 15 : 0} />}>
                     <TextArea
                       value={data.description}
                       style={{ minHeight: 100 }}
-                      maxLength={1700}
+                      // maxLength={1700}
                       onChange={(e) => handleChange('description', e)}
                       autoSize
+                      count={{
+                        show: true,
+                        max: 1700,
+                        strategy: (txt) => runes(txt).length,
+                        exceedFormatter: (txt, { max }) => runes(txt).slice(0, max).join(''),
+                      }}
                     />
                   </Form.Item>
-                  <div style={{ maxWidth: 600, float: 'right', marginRight: 'auto', paddingTop: mobile ? 30 : 0 }}>
+                  <div style={{ maxWidth: 600, float: 'right', marginRight: 'auto', paddingTop: mobile ? 30 : 10 }}>
                     <Button disabled={loading} onClick={submit} >
                       <MdWindPower color={loading ? 'grey' : 'green'} />
                       Submit</Button>
