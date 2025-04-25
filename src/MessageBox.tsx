@@ -46,7 +46,6 @@ const MessageBox = () => {
         style={{ maxWidth: 600 }}
       >
         <Fade direction="up" cascade>
-
           <Form.Item label="Name">
             <Input
               value={msgData.name}

@@ -16,6 +16,8 @@ import { MdWhatsapp, MdMail } from 'react-icons/md';
 
 import { MdAlternateEmail } from 'react-icons/md';
 
+import { Fade } from 'react-awesome-reveal';
+
 import map from './assets/images/map.png';
 import config from './config/config';
 
@@ -112,24 +114,26 @@ const Product = () => {
           layout="horizontal"
           style={{ maxWidth: 600 }}
         >
-          <Form.Item label="Name">
-            <Input
-              value={msgData.name}
-              placeholder='Your Name'
-              onChange={(e) => handleChange('name', e)}
-            />
-          </Form.Item>
-          <Form.Item label="Contact Detail">
-            <Input placeholder='Phone Number or Email Address' onChange={(e) => handleChange('contact', e)} />
-          </Form.Item>
-          <Form.Item label="Message">
-            <TextArea placeholder="Message" autoSize style={{ minHeight: 100 }} onChange={(e) => handleChange('message', e)} />
-          </Form.Item>
-          <div style={{ float: 'right' }}>
-            <button style={{ background: 'rgb(32, 75, 32)' }} onClick={submit}>
-              Send
-            </button>
-          </div>
+          <Fade direction="up" cascade>
+            <Form.Item label="Name">
+              <Input
+                value={msgData.name}
+                placeholder='Your Name'
+                onChange={(e) => handleChange('name', e)}
+              />
+            </Form.Item>
+            <Form.Item label="Contact Detail">
+              <Input placeholder='Phone Number or Email Address' onChange={(e) => handleChange('contact', e)} />
+            </Form.Item>
+            <Form.Item label="Message">
+              <TextArea placeholder="Message" autoSize style={{ minHeight: 100 }} onChange={(e) => handleChange('message', e)} />
+            </Form.Item>
+            <div style={{ float: 'right' }}>
+              <button style={{ background: 'rgb(32, 75, 32)' }} onClick={submit}>
+                Send
+              </button>
+            </div>
+          </Fade>
         </Form>
 
       </>
@@ -204,13 +208,21 @@ const Product = () => {
             }
             {
               data.contactMethod === 'MAIL' && data.email && (
-                <div style={{ float: 'right', width: mobile ? '100%' : '60%' }}>
+                <div style={{ float: 'right', width: mobile ? '100%' : '60%', paddingTop: 100, paddingBottom: 100 }}>
                   <div>
                     <div style={{ float: 'right' }}>
                       <button
                         // className="glow-on-hover"
                         onClick={toggleMsgBox}
-                        style={{ background: msgBoxOpen ? 'black' : 'rgb(176, 175, 67)', padding: 7, fontSize: 13, color: msgBoxOpen ? 'grey' : 'rgb(0, 0, 0)', fontWeight: 600 }}
+                        style={{
+                          background: 'rgb(156, 193, 171)',
+                          padding: 7,
+                          paddingBottom: 10,
+                          fontSize: 13,
+                          color: msgBoxOpen ? 'rgb(0,0,0)' : 'rgb(0, 0, 0)',
+                          fontWeight: 600,
+                          borderRadius: 5
+                        }}
                       >
                         <MdMail style={{ marginBottom: -7, fontSize: 22, paddingRight: 1 }} />
                         {"Send Email"}
