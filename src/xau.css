@@ -105,6 +105,12 @@ li {
   }
 }
 
+@font-face {
+  font-family: "Ubuntu";
+  src: url("/fonts/Ubuntu-R.ttf") format("truetype");
+  font-style: normal;
+}
+
 
 @keyframes glow {
   0% { background-position: 0 0; }

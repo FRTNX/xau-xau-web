@@ -401,7 +401,7 @@ const NewProduct: React.FC = () => {
     console.log('Received values of form: ', values);
   };
 
-  const HelperText = ({ text, color, padding=0}) =>
+  const HelperText = ({ text, color, padding = 0 }) =>
     <div style={{ paddingBottom: mobile ? 0 : 12, paddingTop: padding }}>
       <span style={{ color }}>{text}</span>
     </div>

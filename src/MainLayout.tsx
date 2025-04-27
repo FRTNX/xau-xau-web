@@ -136,15 +136,6 @@ const MainLayout: React.FC = ({ children }) => {
     setBreadcrumbs(newCrumbs);
   }
 
-  // if (!localStorage.getItem('user')) {
-  //   const pathname = window.location.pathname;
-  //   console.log('pathname:', pathname)
-  //   const exceptions = ['/signin', '/regiser']
-  //   if (!exceptions.includes(pathname)) {
-  //     window.location.href = '/signin'
-  //   }
-  // }
-
   const toggleSidebar = () => {
     console.log('toggling sidebar')
     if (sidebarCollapsed) {
@@ -210,7 +201,7 @@ const MainLayout: React.FC = ({ children }) => {
           preRenderFirstString={true}
           wrapper="span"
           speed={1}
-          style={{ fontSize: mobile ? 50 : 65, fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif', color: 'white' }}
+          style={{ fontSize: mobile ? 50 : 65, fontFamily: 'Ubuntu', color: 'white' }}
           repeat={Infinity}
         />
       </div>
