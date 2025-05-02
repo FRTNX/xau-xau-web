@@ -1,5 +1,27 @@
+@font-face {
+  font-family: "X";
+  src: url("public/fonts/temp/Nirmala.ttf") format("truetype");
+  font-style: normal;
+}
+
+/*  Feels like rock and roll
+@font-face {
+  font-family: "X";
+  src: url("/fonts/temp/AmazOOSTROVFine.ttf") format("truetype");
+  font-style: normal;
+}
+*/
+
+/* classy
+@font-face {
+  font-family: "X";
+  src: url("public/fonts/temp/UltraCondensedSansSerif.ttf") format("truetype");
+  font-style: normal;
+}
+*/
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: X;
   line-height: 1.5;
   font-weight: 400;
 

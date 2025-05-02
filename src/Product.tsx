@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'
 import { Carousel, Col, Row } from 'antd';
 
-import { Input, Form } from 'antd';
+import { Input, Form, Menu, Dropdown } from 'antd';
 import type { GetProps } from 'antd';
 
 import { EditFilled } from '@ant-design/icons';
-import { MdLocationPin, MdPriceChange } from 'react-icons/md';
+import { MdLocationPin, MdPriceChange, MdShare } from 'react-icons/md';
 
 import { formatPrice } from './utils';
 import { fetchProduct, productEmail } from './api/product.api';
@@ -26,11 +26,49 @@ import "./components/fancy-buttons/hover.glow.css";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
 
+import { DownOutlined } from '@ant-design/icons';
+
+
 dayjs.extend(relativeTime);
 
 const { TextArea } = Input;
 
 const baseUrl = `${config.baseUrl}/api/v0/product/image`;
+
+const VerticalDotMenu = () => {
+  const items = [
+    {
+      key: '1',
+      label: <a href="#">Option 1</a>,
+    },
+    {
+      key: '2',
+      label: <a href="#">Option 2</a>,
+    },
+    {
+      key: '3',
+      label: <a href="#">Option 3</a>,
+    },
+  ];
+
+  return (
+    <Dropdown
+      overlay={(
+        <Menu>
+          {items.map(item => (
+            <Menu.Item key={item.key}>{item.label}</Menu.Item>
+          ))}
+        </Menu>
+      )}
+      trigger={['click']}
+    >
+      <a href="#">
+        {/* You can customize the appearance of the dot */}
+        <DownOutlined style={{ fontSize: '24px' }} />
+      </a>
+    </Dropdown>
+  );
+};
 
 const Product = () => {
   const { id } = useParams();
@@ -140,9 +178,15 @@ const Product = () => {
     )
   }
 
-  const EditButton = () => {
+  const UserActions = () => {
     return (
-      <div style={{ float: 'right', paddingLeft: 10, marginTop: -4 }}>
+      <div style={{ float: 'right', paddingLeft: 10, marginTop: -80 }}>
+        <button
+          style={{ padding: mobile ? 7 : 10, fontSize: mobile ? 10 : 15, color: 'rgb(249, 249, 249)' }}
+          // onClick={() => window.location.href = `/edit/product/${id}`}
+        >
+          <MdShare style={{ fontSize: 25, marginBottom: -7 }} />
+        </button>
         <button
           style={{ background: 'black', padding: mobile ? 7 : 10, fontSize: mobile ? 10 : 15, color: 'rgb(249, 249, 249)' }}
           onClick={() => window.location.href = `/edit/product/${id}`}
@@ -166,6 +210,7 @@ const Product = () => {
 
   return (
     <>
+      {/* <EditFloater /> */}
       <div style={{ minHeight: '100vh' }}>
         <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 20 }, 18]}>
           <Col xs={24} sm={24} md={24} lg={12} xl={15}>
@@ -174,7 +219,7 @@ const Product = () => {
                 data.images.map((imageUrl, index) => (
                   <div key={index}>
                     <img
-                      src={imageUrl}
+                      src={data.env === 'dev' ? baseUrl + `?id=${data._id}&&index=${index}` : imageUrl}
                       width={'100%'}
                       height={mobile ? 400 : 600}
                       style={{ objectFit: 'cover', borderRadius: 10 }} />
@@ -183,11 +228,14 @@ const Product = () => {
               }
             </Carousel>
             <div>
-              <div style={{ marginTop: -10 }}>
+              <div style={{ marginTop: -10, isplay: 'inline-block' }}>
                 <p style={{ fontSize: mobile ? 23 : 25, lineHeight: 1.3 }}>{data.name}</p>
                 <p style={{ fontSize: 17, marginTop: -20 }}>
                   {data.currency}{" "}{formatPrice(data.price)} <MdPriceChange style={{ color: 'rgb(117, 170, 106)' }} />
                 </p>
+              </div>
+              <div style={{}}>
+                <UserActions />
               </div>
               <p style={{ lineHeight: 0, fontSize: mobile ? 12 : 15, marginTop: -5, color: 'grey' }}>{dayjs(data.created).fromNow()}</p>
               <p style={{ fontSize: mobile ? 15 : 16, color: 'grey', marginTop: 25, marginLeft: -5 }}><MdLocationPin style={{ marginBottom: -2, color: 'green' }} />{data.location}</p>

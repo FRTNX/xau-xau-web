@@ -35,6 +35,23 @@ const createThumbnail = async (productId, form) => {
   }
 }
 
+const editProduct = async (productId, form) => {
+  try {
+    const response = await fetch(`${config.baseUrl}/api/v0/product?id=${productId}`, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        // 'Content-Type': 'application/json'
+      },
+      body: form
+    });
+
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 const fetchProduct = async (productId: string) => {
   try {
     const response = await fetch(`${config.baseUrl}/api/v0/product?id=${productId}`, {
@@ -51,18 +68,26 @@ const fetchProduct = async (productId: string) => {
   }
 }
 
-const fetchProducts = async (category: string | null = null, limit: number | null = null) => {
+const fetchProducts = async ({ category, limit, status }) => {
   try {
     let query = ``;
     if (category) {
-      query = `?category=${category}`
+      query = `?category=${category}`;
     }
 
     if (limit) {
       if (query.length > 0) {
-        query = `${query}&&limit=${limit}`
+        query = `${query}&&limit=${limit}`;
       } else {
-        query = `?limit=${limit}`
+        query = `?limit=${limit}`;
+      }
+    }
+
+    if (status) {
+      if (query.length > 0) {
+        query = `${query}&&status=${status}`;
+      } else {
+        query = `?status=${status}`;
       }
     }
 
@@ -131,6 +156,7 @@ const fetchImages = async (productId: string) => {
 
 export {
   createProduct,
+  editProduct,
   createThumbnail,
   fetchProduct,
   fetchProducts,

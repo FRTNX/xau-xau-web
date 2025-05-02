@@ -21,19 +21,26 @@ import './xau.css';
 
 const { Header, Content, Footer, Sider } = Layout;
 
+const secondaryColor = 'rgb(255, 255, 255)';
+
+const iconStyle = {
+  color: secondaryColor,
+  marginBottom: 4,
+  // fontSize: 15
+}
 
 // todo: change options based on whether user is logged in as well
 // as type of user account
 const items1: MenuProps['items'] = [
-  [<MdWorkspaces />, 'Home'],
-  [<PieChartOutlined />, 'Ads Dashboard'],
-  [<DollarCircleOutlined />, 'Sell Something'],
-  [<MdBarChart />, 'Your Products'],
-  [<MdUpcoming />, 'Auctions']
+  [<MdWorkspaces style={{ ...iconStyle }} />, 'Home'],
+  [<PieChartOutlined style={{...iconStyle }}/>, 'Ads Dashboard'],
+  [<DollarCircleOutlined style={{ ...iconStyle}}/>, 'Sell Something'],
+  [<MdBarChart style={{ ...iconStyle }}/>, 'Your Products'],
+  [<MdUpcoming style={{ ...iconStyle }}/>, 'Auctions']
 ].map((key) => ({
   key: key[1],
   icon: key[0],
-  label: `${key[1]}`,
+  label:`${key[1]}`,
 }));
 
 // const unsignedItems: MenuProps['items'] = [
@@ -233,7 +240,7 @@ const MainLayout: React.FC = ({ children }) => {
               onCollapse={(collapsed, type) => {
                 console.log(collapsed, type);
               }}
-              
+
             >
               <div className="demo-logo-vertical" />
               <Menu
@@ -256,7 +263,7 @@ const MainLayout: React.FC = ({ children }) => {
                   onClick={toggleSidebarDesktop}
                   style={{ marginTop: -50, paddingLeft: 15, color: 'white', fontSize: 25 }}
                 >
-                  <MenuOutlined size={30} />
+                  <MenuOutlined size={30} style={{ color: secondaryColor }} />
                 </div>
               )
             }
@@ -267,7 +274,7 @@ const MainLayout: React.FC = ({ children }) => {
                     onClick={toggleSidebar}
                     style={{ position: 'absolute', right: 30, top: 10, color: 'white', fontSize: 20 }}
                   >
-                    <MenuOutlined size={30} />
+                    <MenuOutlined size={30} style={{ color: secondaryColor }}/>
                   </div>
                 )
               }
@@ -287,7 +294,7 @@ const MainLayout: React.FC = ({ children }) => {
               <div
                 className='dark-secondary'
                 style={{
-                  padding: mobile ? 18 : 24,
+                  padding: mobile ? 10 : 24,
                   minHeight: 360,
                   borderRadius: 10,
                 }}

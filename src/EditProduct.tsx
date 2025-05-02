@@ -19,10 +19,12 @@ import {
   theme
 } from 'antd';
 
-import { MdImage, MdLocationPin } from 'react-icons/md';
+import { runes } from 'runes2';
+
+import { MdImage, MdLocationPin, MdPriceChange } from 'react-icons/md';
 
 import { formatPrice } from './utils';
-import { createProduct, fetchProduct } from './api/product.api';
+import { editProduct, fetchProduct } from './api/product.api';
 
 import auth from './auth/auth-helper';
 import config from './config/config';
@@ -62,6 +64,7 @@ const EditProduct: React.FC = () => {
   const [previewList, setPreviewList] = useState([]);
 
   const [formDisabled, setFormDisabled] = useState(false);
+  const [location, setLocation] = useState('');
 
   const [category, setCategory] = useState('');
   const [status, setStatus] = useState('');
@@ -74,6 +77,27 @@ const EditProduct: React.FC = () => {
 
   const [phoneNumber, setPhoneNumber] = useState<number>();
   const [email, setEmail] = useState('');
+
+  const [locations, setLocations] = useState([
+    "Nationwide",
+    "Online",
+    "Harare",
+    "Bulawayo",
+    "Gweru",
+    "Bindura",
+    "Mutare",
+    "Masvingo",
+    "Zvishavane",
+    "Chinhoyi",
+    "Mutoko",
+    "Chiruma",
+    "Dzaloniya",
+    "Kezi",
+    "Nkayi",
+    "Gwanda",
+    "Matopo",
+    "Victoria Falls"
+  ]);
 
   const [data, setData] = useState({
     name: '',
@@ -106,6 +130,8 @@ const EditProduct: React.FC = () => {
     if (result.email) {
       setEmail(result.email)
     }
+    setLocation(result.location)
+
   }
 
   const handlePreview = async (file: UploadFile) => {
@@ -164,6 +190,12 @@ const EditProduct: React.FC = () => {
     }
   }
 
+  const handleChangeLocation = (newLocation: string | null) => {
+    if (newLocation) {
+      setLocation(newLocation)
+    }
+  }
+
   const handleChangeCategory = (newCategory: string | null) => {
     if (newCategory) {
       setCategory(newCategory)
@@ -183,14 +215,14 @@ const EditProduct: React.FC = () => {
   };
 
   const submit = async () => {
-    if (jwt) {
+    if (jwt) {   // todo: a;so check if user is product owner
       const formData = new FormData();
       console.log('got local user id:', jwt.user._id)
-      fileList.map((file) => {
-        if (file.originFileObj) {
-          formData.append(`images`, file.originFileObj);
-        }
-      })
+      // fileList.map((file) => {
+      //   if (file.originFileObj) {
+      //     formData.append(`images`, file.originFileObj);
+      //   }
+      // })
       jwt.user._id && formData.append('userId', jwt.user._id);
       data.name && formData.append('name', data.name);
       data.description && formData.append('description', data.description);
@@ -199,12 +231,12 @@ const EditProduct: React.FC = () => {
       currency && formData.append('currency', currency)
       status && formData.append('status', status);
       contactMethod && formData.append('contactMethod', contactMethod);
-      data.location && formData.append('location', data.location);
+      location && formData.append('location', location);
       phoneNumber && formData.append('phoneNumber', String(phoneNumber));
       countryCode && formData.append('countryCode', countryCode);
       email && formData.append('email', email);
 
-      const result = await createProduct(formData);
+      const result = await editProduct(data._id, formData);
       console.log('result:', result)
 
       if (result.productId) {
@@ -223,7 +255,7 @@ const EditProduct: React.FC = () => {
   return (
     <>
       <ConfigProvider
-        theme={{ algorithm: [theme.darkAlgorithm], token: { colorBgContainer: '#292929' } }}
+        theme={{ algorithm: [theme.darkAlgorithm], token: { colorBgContainer: '#292929', colorError: 'rgb(91, 156, 78)' } }}
       >
         <div style={{ minHeight: '100vh' }}>
           <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 20 }, 18]}>
@@ -233,7 +265,7 @@ const EditProduct: React.FC = () => {
                   data.images.map((imageUrl, index) => (
                     <div key={index}>
                       <img
-                        src={imageUrl}
+                        src={data.env === 'dev' ? baseUrl + `?id=${data._id}&&index=${index}` : imageUrl}
                         width={'100%'}
                         height={mobile ? 400 : 600}
                         style={{ objectFit: 'cover', borderRadius: 10 }} />
@@ -252,13 +284,13 @@ const EditProduct: React.FC = () => {
               }
               <div>
                 <div style={{ marginTop: -10 }}>
-                  <p style={{ display: 'inline-block', fontSize: mobile ? 18 : 25 }}>{data.name}</p>
-                  <p style={{ display: 'inline-block', float: 'right', fontSize: mobile ? 18 : 25 }}>
-                    {currency}{" "}{formatPrice(price)}
+                  <p style={{ fontSize: mobile ? 23 : 25, lineHeight: 1.3 }}>{data.name}</p>
+                  <p style={{ fontSize: 17, marginTop: -20 }}>
+                    {currency}{" "}{formatPrice(price)} <MdPriceChange style={{ color: 'rgb(117, 170, 106)' }} />
                   </p>
                 </div>
-                <p style={{ lineHeight: 0, fontSize: mobile ? 12 : 15, marginTop: -10, color: 'grey' }}>{'5 days ago'}</p>
-                <p style={{ fontSize: mobile ? 15 : 16, color: 'grey', marginTop: 27 }}><MdLocationPin style={{ marginBottom: -2, color: 'green' }} />{data.location}</p>
+                <p style={{ lineHeight: 0, fontSize: mobile ? 12 : 15, marginTop: -5, color: 'grey' }}>{'[date section]'}</p>
+                <p style={{ fontSize: mobile ? 15 : 16, color: 'grey', marginTop: 25, marginLeft: -5 }}><MdLocationPin style={{ marginBottom: -2, color: 'green' }} />{location}</p>
                 <p style={{ whiteSpace: 'pre-line', fontSize: mobile ? 15 : 16 }}>{data.description}</p>
               </div>
             </Col>
@@ -274,7 +306,7 @@ const EditProduct: React.FC = () => {
                 >
                   <Form.Item label={<p>Upload</p>} valuePropName="fileList" getValueFromEvent={normFile}>
                     <Upload
-                      action={`${config.baseUrl}/api/v0/mock/img/upload`}
+                      action={`/boop`}
                       listType="picture-card"
                       fileList={fileList}
                       onPreview={handlePreview}
@@ -323,10 +355,16 @@ const EditProduct: React.FC = () => {
                     <Select
                       style={{}}
                       onChange={handleChangeCategory}
+                      value={category}
                     >
                       <Select.Option value="computers">Computers & Electronics</Select.Option>
                       <Select.Option value="vehicles">Vehicles</Select.Option>
-                      <Select.Option value="accomodation">Rooms to Rent</Select.Option>
+                      <Select.Option value="accomodation">Accomodation: Houses, Rooms, Land</Select.Option>
+                      <Select.Option value="home_goods">Home Goods: Furniture & Appliances</Select.Option>
+                      <Select.Option value="services">Services</Select.Option>
+                      <Select.Option value="events">Events</Select.Option>
+                      <Select.Option value="collectables">Art & Collectables</Select.Option>
+                      <Select.Option value="food_bev">Food & Beverages</Select.Option>
                       <Select.Option value="other">Other</Select.Option>
                     </Select>
                   </Form.Item>
@@ -386,20 +424,29 @@ const EditProduct: React.FC = () => {
                     )
                   }
                   <Form.Item label={<p>Location</p>}>
-                    <Input
-                      value={data.location}
-                      onChange={(e) => handleChange('location', e)}
-                    />
+                    <Select
+                      style={{}}
+                      value={location}
+                      onChange={handleChangeLocation}
+                    >
+                      {
+                        locations.map((loc) => <Select.Option value={loc}>{loc}</Select.Option>)
+                      }
+                    </Select>
                   </Form.Item>
                   <Form.Item label={<p>Description</p>}>
                     <TextArea
                       value={data.description}
                       onChange={(e) => handleChange('description', e)}
-                      rows={4}
+                      style={{ minHeight: 100 }}
+                      autoSize
+                      count={{
+                        show: true,
+                        max: 1700,
+                        strategy: (txt) => runes(txt).length,
+                        exceedFormatter: (txt, { max }) => runes(txt).slice(0, max).join(''),
+                      }}
                     />
-                  </Form.Item>
-                  <Form.Item label={<p>Rate</p>}>
-                    <Rate />
                   </Form.Item>
                   <div style={{ maxWidth: 600, float: 'right', marginRight: 'auto' }}>
                     <Button onClick={submit}>Submit</Button>

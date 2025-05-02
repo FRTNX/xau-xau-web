@@ -673,11 +673,10 @@ const NewProduct: React.FC = () => {
                       }
                     </Select>
                   </Form.Item>
-                  <Form.Item label={<p>Description</p>} help={<HelperText {...helperText.description} padding={mobile ? 15 : 0} />}>
+                  <Form.Item label={<p>Description</p>} help={<HelperText {...helperText.description} padding={15} />}>
                     <TextArea
                       value={data.description}
                       style={{ minHeight: 100 }}
-                      // maxLength={1700}
                       onChange={(e) => handleChange('description', e)}
                       autoSize
                       count={{
