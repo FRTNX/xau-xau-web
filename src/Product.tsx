@@ -27,6 +27,7 @@ import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 import { DownOutlined } from '@ant-design/icons';
+import auth from './auth/auth-helper';
 
 
 dayjs.extend(relativeTime);
@@ -72,6 +73,7 @@ const VerticalDotMenu = () => {
 
 const Product = () => {
   const { id } = useParams();
+  const jwt = auth.isAuthenticated();
   const mobile = window.innerWidth < 500;
 
   const [msgBoxOpen, setMsgBoxOpen] = useState(false);
@@ -183,16 +185,20 @@ const Product = () => {
       <div style={{ float: 'right', paddingLeft: 10, marginTop: -80 }}>
         <button
           style={{ padding: mobile ? 7 : 10, fontSize: mobile ? 10 : 15, color: 'rgb(249, 249, 249)' }}
-          // onClick={() => window.location.href = `/edit/product/${id}`}
+        // onClick={() => window.location.href = `/edit/product/${id}`}
         >
           <MdShare style={{ fontSize: 25, marginBottom: -7 }} />
         </button>
-        <button
-          style={{ background: 'black', padding: mobile ? 7 : 10, fontSize: mobile ? 10 : 15, color: 'rgb(249, 249, 249)' }}
-          onClick={() => window.location.href = `/edit/product/${id}`}
-        >
-          <EditFilled />
-        </button>
+        {
+          jwt && jwt.user._id === data.owner && (
+            <button
+              style={{ background: 'black', padding: mobile ? 7 : 10, fontSize: mobile ? 10 : 15, color: 'rgb(249, 249, 249)' }}
+              onClick={() => window.location.href = `/edit/product/${id}`}
+            >
+              <EditFilled />
+            </button>
+          )
+        }
       </div>
     )
   }

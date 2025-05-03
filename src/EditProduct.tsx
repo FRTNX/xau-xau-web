@@ -55,6 +55,10 @@ const EditProduct: React.FC = () => {
   const { id } = useParams();
   const jwt = auth.isAuthenticated();
 
+  if (!jwt) {
+    window.location.href = '/signin'
+  }
+
   const mobile = window.innerWidth < 500;
 
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -115,6 +119,9 @@ const EditProduct: React.FC = () => {
   const populateProduct = async () => {
     const result = await fetchProduct(id);
     console.log('got product:', result)
+    if (result.owner !== jwt.user._id) {
+      window.location.href = '/signin'
+    }
     setData(result);
     setCategory(result.category);
     setStatus(result.status);
@@ -330,6 +337,12 @@ const EditProduct: React.FC = () => {
                     <Input
                       value={data.name}
                       onChange={(e) => handleChange('name', e)}
+                      count={{
+                        show: true,
+                        max: 60,
+                        strategy: (txt) => runes(txt).length,
+                        exceedFormatter: (txt, { max }) => runes(txt).slice(0, max).join(''),
+                      }}
                     />
                   </Form.Item>
                   <Form.Item label={<p>Price</p>}>
